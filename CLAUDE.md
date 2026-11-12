@@ -57,6 +57,16 @@ Son artifacts privados de la cuenta de Tomás Oliveres; pedile acceso si los nec
 - Doc de respaldo con datos y normativa: https://claude.ai/artifact/K8Q9roMxYoQBzZE4yBT29i
 - Brief del prototipo: https://claude.ai/artifact/UfyDJE4xkF8uNWe3ugWNXq
 
+## Commits y push (en la computadora de Tomás Oliveres)
+
+Repo: https://github.com/tomioliveres/chill-cow-hackathon (público, rama `main`). Autorizado por Tomás:
+
+1. Antes de hacer commit y push a `main`, cambiar a la cuenta dueña del repo: `gh auth switch -u tomioliveres`.
+2. Hacer el commit y el push.
+3. Apenas se confirme el push, volver a la cuenta por defecto: `gh auth switch -u atomdev1`.
+
+La carpeta `estudio/` no se sube nunca (está en `.gitignore`). Los compañeros pushean con su propia cuenta si Tomás los agrega como colaboradores.
+
 ## Reglas de relato (obligatorias en pitch, deck, docs y prototipo)
 
 - La idea **arrancó de cero en la hackathon**. No mencionar estudios académicos previos, nombres de proyectos anteriores ni el hardware (collar/sensor) propuesto antes.
