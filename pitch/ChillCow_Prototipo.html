@@ -81,7 +81,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--cc-menta);outline-o
 .kv dt{color:var(--cc-gris)}.kv dd{margin:0;text-align:right;font-weight:600}
 .nfc{border:2px dashed var(--cc-menta);background:var(--cc-menta-suave);border-radius:var(--cc-radio);padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:100%}
 .nfc .ico{width:44px;height:44px;color:var(--cc-pasto)}
-:root:not([data-theme="light"]) .nfc .ico{color:var(--cc-menta)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nfc .ico{color:var(--cc-menta)}}
+:root[data-theme="dark"] .nfc .ico{color:var(--cc-menta)}
 .nfc h3{font-size:20px}
 .nfc.reading .ico{animation:pulse 0.9s ease-in-out infinite}
 .nfc.ok{border-style:solid;border-color:var(--cc-calma);background:var(--cc-calma-bg)}
@@ -155,8 +156,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--cc-menta);outline-o
 .timeline li.new{animation:flash .6s 2}
 
 /* Reception */
-.tags{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
-.tagc{min-height:48px;border-radius:10px;border:1.5px solid var(--cc-linea);background:var(--cc-crema);font-family:var(--cc-font-dato);font-size:15px;font-weight:700;color:var(--cc-gris)}
+.tags{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px}
+.tagc{min-height:44px;border-radius:10px;border:1.5px solid var(--cc-linea);background:var(--cc-crema);font-family:var(--cc-font-dato);font-size:15px;font-weight:700;color:var(--cc-gris)}
 .tagc.read{background:var(--cc-calma-bg);border-color:var(--cc-calma);color:var(--cc-calma-tx)}
 .tagc.sel{outline:3px solid var(--cc-tinta);outline-offset:1px}
 .tagc.fall{background:var(--cc-alerta-bg);border-color:var(--cc-alerta);color:var(--cc-alerta-tx)}
@@ -176,6 +177,39 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--cc-menta);outline-o
 .ckrow .art{font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris)}
 .ckrow .ev{grid-column:1 / -1;font-size:15px;color:var(--cc-gris)}
 .ckrow.flash{animation:flash .5s 1}
+/* Compact checklist: status first, legal detail behind (i) */
+.ckc{display:grid;gap:5px}
+.ckd{border:1px solid var(--cc-linea);border-radius:12px;background:var(--cc-blanco)}
+.ckd>summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto 32px;gap:10px;align-items:center;padding:4px 8px 4px 12px;min-height:44px;cursor:pointer}
+.ckd>summary::-webkit-details-marker{display:none}
+.ckd .t{font-weight:600}
+.inf{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--cc-gris);border:1.5px solid var(--cc-linea);flex:none}
+.inf .ico{width:18px;height:18px}
+.ckd[open] .inf,.ckg[open] .inf{background:var(--cc-menta-suave);color:var(--cc-tinta);border-color:var(--cc-menta-suave)}
+.ckd .det{padding:0 12px 10px;display:grid;gap:2px;font-size:15px;color:var(--cc-gris)}
+.ckd .det .art,.ckg .det .art{font-family:var(--cc-font-dato)}
+.ckg{margin-top:4px}
+.ckg>summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto 32px;gap:10px;align-items:center;min-height:40px;cursor:pointer}
+.ckg>summary::-webkit-details-marker{display:none}
+.ckg h4{font-size:16px}
+.ckg .det{font-size:15px;color:var(--cc-gris);padding:2px 0 4px}
+.more>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;cursor:pointer;font-weight:600;font-size:15px;color:var(--cc-calma-tx)}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary .ico{width:16px;height:16px;transition:transform .15s}
+.more[open]>summary .ico{transform:rotate(90deg)}
+.more .det{display:grid;gap:6px;font-size:15px;color:var(--cc-gris);padding-bottom:4px}
+.fold>summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;min-height:32px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary h3{margin:0}
+.fold>summary .chev{margin-left:auto;transition:transform .15s;color:var(--cc-gris)}
+.fold[open]>summary .chev{transform:rotate(90deg)}
+.fold[open]>summary{margin-bottom:8px}
+.ixrow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:start}
+.ixsub{display:grid;gap:8px}
+@media (max-width:560px){.ixrow{grid-template-columns:minmax(0,1fr)}.ixsub{grid-template-columns:1fr 1fr}}
+.inline-kv{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:15px}
+.inline-kv b{font-weight:600}
+@media (max-width:560px){.ckd>summary,.ckg>summary{grid-template-columns:minmax(0,1fr) 32px}.ckd>summary .chip,.ckg>summary .chip{grid-column:1;grid-row:2;justify-self:start}.ckd>summary .inf,.ckg>summary .inf{grid-column:2;grid-row:1 / span 2}}
 
 /* Report */
 .repgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px}
@@ -253,6 +287,7 @@ footer.foot{padding-block:8px 32px;font-size:15px;color:var(--cc-gris)}
 <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
 <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></symbol>
 <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
 <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
 </defs></svg>
 
@@ -420,11 +455,18 @@ function verdict(list){
 var CK={ok:['calma','Cumple','check'],obs:['atencion','Cumple con observación','alert'],no:['alerta','No cumple','x'],pend:['pend','Pendiente','clock'],info:['info','Registrado','activity']};
 var CK_EN={ok:['calma','Meets','check'],obs:['atencion','Meets, with a note','alert'],no:['alerta','Does not meet','x'],pend:['pend','Pending','clock'],info:['info','Recorded','activity']};
 function ckChip(st,en){var c=(en?CK_EN:CK)[st];return '<span class="chip st-'+c[0]+'">'+ico(c[2])+c[1]+'</span>';}
-function ckRows(list){return list.map(function(x){return '<div class="ckrow"><div><div class="t">'+x.t+'</div><div class="art">'+x.art+'</div></div>'+ckChip(x.st)+'<div class="ev">'+x.ev+'</div></div>';}).join('');}
-function ckBlock(id){
-  var c=checklist(id);
-  return '<div class="ck"><h4>Obligatorio para exportar <span>Reg. (CE) 1099/2009, art. 12: equivalencia exigida a la planta</span></h4>'+ckRows(c.must)+
-    '<h4>Viaje: referencia UE <span>Reg. (CE) 1/2005 rige solo dentro de la UE; se usa como vara de referencia</span></h4>'+ckRows(c.trip)+'</div>';
+// Open/closed state of collapsible details survives re-renders (live trip ticks).
+var OPEN={};
+function op(k){return OPEN[k]?' open':'';}
+document.addEventListener('toggle',function(e){var k=e.target&&e.target.getAttribute&&e.target.getAttribute('data-k');if(k) OPEN[k]=e.target.open;},true);
+var INF='<span class="inf" aria-hidden="true">'+ico('info')+'</span>';
+function more(k,label,body){return '<details class="more" data-k="'+k+'"'+op(k)+'><summary>'+ico('chev')+label+'</summary><div class="det">'+body+'</div></details>';}
+function ckRows(list,k){return list.map(function(x,i){var kk=k+'-'+i;return '<details class="ckd" data-k="'+kk+'"'+op(kk)+'><summary><span class="t">'+x.t+'</span>'+ckChip(x.st)+INF+'</summary><div class="det"><span>'+x.ev+'</span><span class="art">'+x.art+'</span></div></details>';}).join('');}
+function ckGroup(k,title,note,v){return '<details class="ckg" data-k="'+k+'"'+op(k)+'><summary><h4>'+title+'</h4>'+(v?ckChip(v):'<span></span>')+INF+'</summary><div class="det">'+note+'</div></details>';}
+function ckBlock(id,noVerdict){
+  var c=checklist(id),vm=verdict(c.must),vt=verdict(c.trip.filter(function(x){return x.st!=='info';}));
+  return '<div class="ckc">'+ckGroup('g-must','Obligatorio para exportar','<span class="art">Reg. (CE) 1099/2009, art. 12</span>: equivalencia exigida a la planta exportadora.',noVerdict?null:vm)+ckRows(c.must,'m')+
+    ckGroup('g-trip','Viaje (referencia UE)','<span class="art">Reg. (CE) 1/2005</span> rige solo dentro de la UE; se usa como vara de referencia.',noVerdict?null:vt)+ckRows(c.trip,'t')+'</div>';
 }
 
 /* ---------- phone ---------- */
@@ -678,23 +720,23 @@ function pRecepcion(){
         (S.caidos.length?'<div class="palert st-alerta" style="margin-top:12px"><b>Animal caído · caravana '+tag(S.caidos[0])+'</b><span>Atenderlo en el lugar, sin arrastrar (Reg. 1099/2009, Anexo III, 1.11). Avisar al veterinario.</span></div>':'')+
         (allRead?'<div style="margin-top:12px">'+protoBlock(sc.ix)+'</div>':'')+
       '</div>'+
-      '<div style="display:grid;gap:16px;align-content:start">'+
-        '<div class="figure"><h3>Espacio por animal</h3><div><span class="num" style="font-size:30px;font-weight:700">'+dec(space)+' m²</span> <span class="muted">por animal · '+h.cab+' cabezas en '+h.jaula+' m²</span></div>'+
-          '<div class="rangebar"><span class="ok" style="left:'+pos(1.3)+';right:calc(100% - '+pos(1.6)+')"></span><span class="mk" style="left:calc('+pos(space)+' - 2px)"></span><span class="lb" style="left:'+pos(1.3)+'">1,3</span><span class="lb" style="left:'+pos(1.6)+'">1,6</span></div>'+
-          '<p class="note">Rango de referencia para ~'+h.peso+' kg: 1,3–1,6 m² (Reg. 1/2005, Anexo I, cap. VII).</p></div>'+
-        '<div class="figure"><h3>'+ico('drop')+'Corral asignado</h3><dl class="kv"><dt>Corral</dt><dd>4</dd><dt>Agua</dt><dd>Permanente</dd><dt>Alimento</dt><dd>Si pasan 12 h</dd></dl></div>'+
+      '<div style="display:grid;gap:12px;align-content:start">'+
+        '<div class="figure"><h3>Espacio por animal <span class="num" style="margin-left:auto;font-size:22px">'+dec(space)+' m²</span></h3>'+
+          '<div class="rangebar" style="margin:14px 0 24px"><span class="ok" style="left:'+pos(1.3)+';right:calc(100% - '+pos(1.6)+')"></span><span class="mk" style="left:calc('+pos(space)+' - 2px)"></span><span class="lb" style="left:'+pos(1.3)+'">1,3</span><span class="lb" style="left:'+pos(1.6)+'">1,6</span></div>'+
+          '<div class="inline-kv">'+ico('drop')+'<span>Corral <b>4</b></span><span>Agua <b>permanente</b></span><span>Alimento <b>si pasan 12 h</b></span></div>'+
+          more('d-space','Ver detalle','<span>'+h.cab+' cabezas en '+h.jaula+' m² de jaula.</span><span>Rango de referencia para ~'+h.peso+' kg: 1,3–1,6 m² (Reg. 1/2005, Anexo I, cap. VII).</span>')+'</div>'+
         '<button type="button" class="btn p bigbtn" id="confirmRec" '+(!allRead||S.received?'disabled':'')+'>'+(S.received?'Recepción confirmada':'Confirmar recepción')+'</button>'+
+        '<div><h3 style="font-size:20px;margin-bottom:4px">Checklist UE de la tropa</h3>'+ckBlock('T-0418')+'</div>'+
       '</div>'+
-    '</div>'+
-    '<div><h3 style="font-size:20px;margin-bottom:8px">Checklist UE de la tropa</h3>'+ckBlock('T-0418')+'</div>';
+    '</div>';
 }
 function protoBlock(ix){
   var st=state(ix);
   if(st==='calma') return '';
   return '<div class="palert st-'+st+'" style="display:grid;gap:6px"><b>'+ico('drop')+' Protocolo de recuperación en corral · acción recomendada</b>'+
-    '<span>La tropa llegó en '+WORD[st]+' ('+ix+'). El panel sugiere, no aplica nada solo; decide el veterinario:</span>'+
+    '<span>La tropa llegó en '+WORD[st]+' ('+ix+'). El panel sugiere; decide el veterinario:</span>'+
     '<ul style="margin:0;padding-left:20px;display:grid;gap:2px"><li>Horas extra de descanso en corral antes de la faena.</li><li>Agua permanente y control de bebederos.</li><li>Feromona apaciguadora materna, donde esté autorizada (a validar con SENASA y el veterinario).</li></ul>'+
-    '<span class="note" style="margin:0">Evidencia publicada: menor cortisol con la feromona aplicada durante los 7 días previos a la faena, no como dosis única en la descarga (Translational Animal Science, 2024). Registro en SENASA y aceptación UE: sin confirmar.</span></div>';
+    more('d-proto','Ver evidencia','<span>Evidencia publicada: menor cortisol con la feromona aplicada durante los 7 días previos a la faena, no como dosis única en la descarga (Translational Animal Science, 2024). Registro en SENASA y aceptación UE: sin confirmar.</span>')+'</div>';
 }
 function readTags(){
   if(S.reading||S.tags>=36) return;
@@ -726,17 +768,20 @@ function pInforme(){
       '<div class="sub">Tropa '+id+' · '+h.origen+', '+h.zona+' · '+h.transp+' · '+h.cab+' novillos · carga '+h.carga+', descarga '+h.llegada+'</div></div>'+
     '<div class="repgrid">'+
       '<div style="display:grid;gap:16px;align-content:start">'+
-        '<div class="bigix st-'+st+'"><div><div class="muted">Índice de bienestar</div><div class="n">'+sc.ix+'</div></div><div><div class="w">'+WORD[st]+'</div><div class="muted">100 = viaje perfecto</div></div></div>'+
-        '<div class="scale" aria-hidden="true"><i style="left:'+sc.ix+'%"></i><span style="left:40%">40</span><span style="left:70%">70</span></div>'+
-        '<div class="grid2"><div class="kpi"><span class="k">Accidentes</span><span class="v">'+sc.accIx+' <small>/ 100</small></span></div><div class="kpi"><span class="k">Condiciones del viaje</span><span class="v">'+sc.condIx+' <small>/ 100</small></span></div></div>'+
+        '<div class="ixrow"><div><div class="bigix st-'+st+'"><div><div class="muted">Índice de bienestar</div><div class="n">'+sc.ix+'</div></div><div><div class="w">'+WORD[st]+'</div><div class="muted">100 = viaje perfecto</div></div></div>'+
+        '<div class="scale" aria-hidden="true"><i style="left:'+sc.ix+'%"></i><span style="left:40%">40</span><span style="left:70%">70</span></div></div>'+
+        '<div class="ixsub"><div class="kpi"><span class="k">Accidentes</span><span class="v">'+sc.accIx+' <small>/ 100</small></span></div><div class="kpi"><span class="k">Condiciones del viaje</span><span class="v">'+sc.condIx+' <small>/ 100</small></span></div></div></div>'+
+        '<div class="verdicts"><div class="verdict"><span><b>Obligatorio para exportar</b></span>'+ckChip(vm)+'</div><div class="verdict"><span><b>Viaje</b> (referencia UE)</span>'+ckChip(vt)+'</div></div>'+
         protoBlock(sc.ix)+
-        '<div class="figure" style="background:var(--cc-blanco)"><h3>Por qué da '+sc.ix+'</h3>'+ptsTable(sc)+'<p class="note" style="margin-top:8px">Índice por eventos con puntos iniciales del equipo, a calibrar con los hematomas en la res.</p></div>'+
-        '<div class="verdicts"><div class="verdict"><span><b>Obligatorio</b> · Reg. 1099/2009</span>'+ckChip(vm)+'</div><div class="verdict"><span><b>Viaje</b> · referencia Reg. 1/2005</span>'+ckChip(vt)+'</div></div>'+
+        '<details class="figure fold" data-k="d-why"'+op('d-why')+' style="background:var(--cc-blanco)"><summary><h3>Por qué da '+sc.ix+'</h3>'+ico('chev','chev')+'</summary>'+ptsTable(sc)+'<p class="note" style="margin-top:8px">Índice por eventos con puntos iniciales del equipo, a calibrar con los hematomas en la res.</p></details>'+
+        '<div class="figure" style="background:var(--cc-blanco)"><h3>Merma estimada <span class="num" style="margin-left:auto;font-size:22px">≈'+dec(kg,0)+' kg</span></h3><span class="muted">Carne recortada por lesiones en '+h.cab+' animales.</span>'+
+          more('d-merma','Ver detalle','<span>Promedio IPCVA: ≈1,37 kg de carcasa perdidos por animal en recortes de lesiones. Además, el viaje se lleva entre 2 y 10 % del peso vivo según la distancia (CFI). Cada kilo de merma es agua, alimento y emisiones que ya se invirtieron en el animal. Se reemplaza por el dato real de la inspección en la res.</span>')+'</div>'+
+      '</div>'+
+      '<div style="display:grid;gap:16px;align-content:start">'+
+        '<div><h3 style="font-size:20px;margin-bottom:4px">Checklist UE</h3>'+ckBlock(id,true)+'</div>'+
         '<div class="figure" style="background:var(--cc-blanco)"><h3>'+ico('shield')+'Certificado para el comprador europeo</h3><div class="qrbox"><div class="qr" id="qr" aria-label="Código QR del certificado público"></div><div style="min-width:0;flex:1;display:grid;gap:8px"><span>Versión pública en inglés, sin login. Escaneá para verla.</span><span class="url" id="certUrl">'+esc(CERT_URL)+'</span>'+
           '<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn s" id="copyUrl">'+ico('link')+'Copiar enlace</button><button type="button" class="btn g" id="dlPdf">'+ico('download')+'Descargar PDF</button></div></div></div></div>'+
-        '<div class="figure" style="background:var(--cc-blanco)"><h3>Merma estimada de la tropa</h3><div><span class="num" style="font-size:26px;font-weight:700">≈'+dec(kg,0)+' kg</span> <span class="muted">de carne recortada por lesiones en '+h.cab+' animales</span></div><p class="note">Promedio IPCVA: ≈1,37 kg de carcasa perdidos por animal en recortes de lesiones. Además, el viaje se lleva entre 2 y 10 % del peso vivo según la distancia (CFI). Cada kilo de merma es agua, alimento y emisiones que ya se invirtieron en el animal. Se reemplaza por el dato real de la inspección en la res.</p></div>'+
       '</div>'+
-      '<div><h3 style="font-size:20px;margin-bottom:8px">Checklist UE</h3>'+ckBlock(id)+'</div>'+
     '</div>';
 }
 
