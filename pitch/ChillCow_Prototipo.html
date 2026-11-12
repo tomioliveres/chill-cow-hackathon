@@ -1,0 +1,896 @@
+<meta charset="utf-8">
+<title>Chill Cow Prototipo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: demo desk — driver's phone on the left, meatpacker panel on the right; stacks on phones. Tokens follow the Chill Cow brand manual. */
+:root{
+  --cc-pasto:#1F4D3A;--cc-menta:#7FD1AE;--cc-menta-suave:#D9F2E6;--cc-crema:#F5F1E8;--cc-tinta:#14201B;
+  --cc-gris:#5F6E66;--cc-linea:#DCD6C8;--cc-blanco:#FFFFFF;--cc-fondo2:#ECE7DC;
+  --cc-calma:#2FA36B;--cc-calma-bg:#E3F4EA;--cc-calma-tx:#1E7A4D;
+  --cc-atencion:#E8A93B;--cc-atencion-bg:#FBF0DA;--cc-atencion-tx:#8A5A00;
+  --cc-alerta:#D9493B;--cc-alerta-bg:#FBE3E0;--cc-alerta-tx:#B23427;
+  --cc-temp:#3E8ED0;--cc-temp-bg:#E1EEF8;
+  --cc-marco:#14201B;--cc-boton-tx:#F5F1E8;
+  --cc-font-titulo:'Outfit',system-ui,sans-serif;--cc-font-texto:'Inter',system-ui,sans-serif;--cc-font-dato:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --cc-radio:14px;--cc-radio-chico:8px;--cc-sombra:0 2px 12px rgba(20,32,27,.08);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --cc-crema:#0F1A15;--cc-tinta:#EEF3EF;--cc-gris:#9BAAA2;--cc-linea:#24342C;--cc-blanco:#16241D;--cc-fondo2:#13211A;
+  --cc-menta-suave:#1C3A2D;--cc-calma-bg:#15301F;--cc-atencion-bg:#3A2D12;--cc-alerta-bg:#3D1814;--cc-temp-bg:#14283A;
+  --cc-calma-tx:#6FD29F;--cc-atencion-tx:#F2C46B;--cc-alerta-tx:#F08A7E;--cc-marco:#050A08;--cc-pasto:#2C6A50;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --cc-crema:#0F1A15;--cc-tinta:#EEF3EF;--cc-gris:#9BAAA2;--cc-linea:#24342C;--cc-blanco:#16241D;--cc-fondo2:#13211A;
+  --cc-menta-suave:#1C3A2D;--cc-calma-bg:#15301F;--cc-atencion-bg:#3A2D12;--cc-alerta-bg:#3D1814;--cc-temp-bg:#14283A;
+  --cc-calma-tx:#6FD29F;--cc-atencion-tx:#F2C46B;--cc-alerta-tx:#F08A7E;--cc-marco:#050A08;--cc-pasto:#2C6A50;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--cc-crema);color:var(--cc-tinta)}
+body{font-family:var(--cc-font-texto);font-size:15px;line-height:1.45}
+h1,h2,h3,h4{font-family:var(--cc-font-titulo);margin:0;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--cc-menta);outline-offset:2px}
+.num,.mono{font-family:var(--cc-font-dato);font-variant-numeric:tabular-nums}
+.muted{color:var(--cc-gris)}
+.ico{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1440px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* App bar */
+.appbar{background:var(--cc-pasto);color:#F5F1E8}
+.appbar .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--cc-font-titulo);font-weight:800;font-size:24px;letter-spacing:-.01em}
+.brand b{color:var(--cc-menta);font-weight:800}
+.appbar .tag{font-family:var(--cc-font-dato);font-size:15px;opacity:.85}
+.appbar .sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:12px;border:0;font-family:var(--cc-font-titulo);font-weight:700;font-size:16px}
+.btn.p{background:var(--cc-pasto);color:var(--cc-boton-tx)}
+.btn.s{background:var(--cc-menta-suave);color:var(--cc-tinta)}
+.btn.d{background:var(--cc-alerta);color:#fff}
+.btn.g{background:transparent;border:1.5px solid var(--cc-linea);color:var(--cc-tinta)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.appbar .btn.g{border-color:rgba(245,241,232,.4);color:#F5F1E8}
+.modes{display:inline-flex;border:1.5px solid rgba(245,241,232,.4);border-radius:12px;overflow:hidden}
+.modes button{min-height:44px;padding:0 14px;background:transparent;color:#F5F1E8;border:0;font-family:var(--cc-font-titulo);font-weight:700;font-size:15px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--cc-menta);color:#14201B}
+.pitchbar{background:var(--cc-fondo2);border-bottom:1px solid var(--cc-linea)}
+.pitchbar .wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-block:10px}
+.pb-l{font-family:var(--cc-font-dato);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--cc-gris);margin-right:4px}
+.pstep{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--cc-linea);background:var(--cc-blanco);color:var(--cc-tinta);font-family:var(--cc-font-titulo);font-weight:700;font-size:15px;cursor:pointer}
+.pstep[aria-current="step"]{background:var(--cc-pasto);border-color:var(--cc-pasto);color:var(--cc-boton-tx)}
+.pitchbar .sp{flex:1}
+
+/* Demo grid */
+.demo{display:grid;grid-template-columns:360px minmax(0,1fr);gap:24px;align-items:start;padding-block:24px}
+.colhead{display:flex;align-items:center;gap:8px;font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+@media (max-width:900px){.demo{grid-template-columns:minmax(0,1fr)}}
+
+/* Phone */
+.phone{width:340px;max-width:100%;margin:0 auto;background:var(--cc-marco);border-radius:40px;padding:12px 12px 16px;box-shadow:0 12px 40px rgba(20,32,27,.25);position:relative}
+.phone .notch{width:96px;height:22px;background:#000;border-radius:0 0 14px 14px;margin:-12px auto 8px}
+.pscreen{background:var(--cc-crema);border-radius:28px;min-height:600px;padding:16px;display:flex;flex-direction:column;gap:16px;overflow:hidden;position:relative}
+.ptop{display:flex;align-items:center;gap:8px;font-family:var(--cc-font-titulo);font-weight:800;font-size:18px}
+.ptop b{color:var(--cc-calma-tx)}
+.ptop .t{margin-left:auto;font-family:var(--cc-font-dato);font-size:15px;font-weight:500;color:var(--cc-gris)}
+.bezel{display:flex;justify-content:flex-end;padding:8px 6px 0}
+.demo-dot{width:36px;height:24px;border-radius:12px;border:1px dashed rgba(255,255,255,.25);background:transparent;color:rgba(255,255,255,.45);font-size:15px;line-height:1}
+.drawer{background:var(--cc-blanco);border:1px dashed var(--cc-gris);border-radius:var(--cc-radio);padding:12px;display:grid;gap:8px;margin-top:10px}
+.drawer p{margin:0;font-size:15px;color:var(--cc-gris)}
+.card{background:var(--cc-blanco);border:1px solid var(--cc-linea);border-radius:var(--cc-radio);padding:16px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:15px}
+.kv dt{color:var(--cc-gris)}.kv dd{margin:0;text-align:right;font-weight:600}
+.nfc{border:2px dashed var(--cc-menta);background:var(--cc-menta-suave);border-radius:var(--cc-radio);padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:100%}
+.nfc .ico{width:44px;height:44px;color:var(--cc-pasto)}
+:root:not([data-theme="light"]) .nfc .ico{color:var(--cc-menta)}
+.nfc h3{font-size:20px}
+.nfc.reading .ico{animation:pulse 0.9s ease-in-out infinite}
+.nfc.ok{border-style:solid;border-color:var(--cc-calma);background:var(--cc-calma-bg)}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.6}}
+.bigbtn{width:100%;min-height:64px;font-size:20px;border-radius:16px}
+.status-ring{display:flex;flex-direction:column;align-items:center;gap:4px;padding:20px 12px;border-radius:20px;background:var(--st-bg);border:2px solid var(--st)}
+.status-ring .n{font-family:var(--cc-font-dato);font-weight:700;font-size:72px;line-height:1;color:var(--st-tx)}
+.status-ring .w{font-family:var(--cc-font-titulo);font-weight:800;font-size:28px;color:var(--st-tx)}
+.status-ring .l{font-size:15px;color:var(--cc-gris)}
+.st-calma{--st:var(--cc-calma);--st-bg:var(--cc-calma-bg);--st-tx:var(--cc-calma-tx)}
+.st-atencion{--st:var(--cc-atencion);--st-bg:var(--cc-atencion-bg);--st-tx:var(--cc-atencion-tx)}
+.st-alerta{--st:var(--cc-alerta);--st-bg:var(--cc-alerta-bg);--st-tx:var(--cc-alerta-tx)}
+.st-pend{--st:var(--cc-linea);--st-bg:var(--cc-fondo2);--st-tx:var(--cc-gris)}
+.st-info{--st:var(--cc-temp);--st-bg:var(--cc-temp-bg);--st-tx:var(--cc-temp)}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pstat{background:var(--cc-blanco);border:1px solid var(--cc-linea);border-radius:12px;padding:10px 12px}
+.pstat .k{font-size:15px;color:var(--cc-gris)}.pstat .v{font-family:var(--cc-font-dato);font-weight:700;font-size:18px;white-space:nowrap}
+.palert{border-radius:var(--cc-radio);padding:12px 14px;border-left:6px solid var(--st);background:var(--st-bg)}
+.palert b{display:block;font-family:var(--cc-font-titulo);font-size:18px;color:var(--st-tx)}
+.palert span{font-size:15px}
+.flash{animation:flash .6s ease-out 2}
+@keyframes flash{50%{transform:scale(1.03)}}
+
+/* Panel */
+.panel{background:var(--cc-blanco);border:1px solid var(--cc-linea);border-radius:20px;box-shadow:var(--cc-sombra);min-width:0;overflow:hidden}
+.tabs{display:flex;gap:4px;padding:8px;border-bottom:1px solid var(--cc-linea);background:var(--cc-fondo2);overflow-x:auto}
+.tabs button{border:0;background:transparent;min-height:48px;padding:0 14px;border-radius:10px;font-weight:600;font-size:15px;white-space:nowrap;color:var(--cc-gris)}
+.tabs button[aria-selected="true"]{background:var(--cc-blanco);color:var(--cc-tinta);box-shadow:var(--cc-sombra)}
+.pbody{padding:24px;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0}
+@media (max-width:600px){.pbody{padding:16px}}
+.ph{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.ph h2{font-size:28px;font-weight:800;letter-spacing:-.01em}
+.ph .sub{color:var(--cc-gris);font-size:15px;width:100%}
+.ph .sp{flex:1}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 12px;font-size:15px;font-weight:600;background:var(--st-bg);color:var(--st-tx);white-space:nowrap}
+.chip .ico{width:16px;height:16px}
+.chip i{width:9px;height:9px;border-radius:50%;background:var(--st);display:inline-block}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.kpi{border:1px solid var(--cc-linea);border-radius:var(--cc-radio);padding:14px 16px;display:grid;gap:2px;background:var(--cc-crema)}
+.kpi .k{font-size:15px;color:var(--cc-gris)}
+.kpi .v{font-family:var(--cc-font-dato);font-weight:700;font-size:26px}
+.kpi .v small{font-size:15px;font-weight:500;color:var(--cc-gris)}
+
+/* Herd list */
+.herds{display:grid;gap:10px}
+.herd{display:grid;grid-template-columns:110px minmax(0,1.4fr) minmax(0,1fr) 120px 150px 24px;gap:12px;align-items:center;border:1px solid var(--cc-linea);border-left:6px solid var(--st);border-radius:var(--cc-radio);padding:12px 14px;background:var(--cc-blanco);text-align:left;width:100%}
+.herd:hover{background:var(--cc-fondo2)}
+.herd .id{font-family:var(--cc-font-dato);font-weight:700;font-size:17px}
+.herd .o b{display:block;font-weight:600}
+.herd .o span,.herd .e span{font-size:15px;color:var(--cc-gris)}
+.herd .ix{font-family:var(--cc-font-dato);font-weight:700;font-size:26px;color:var(--st-tx);text-align:right}
+.live-pill{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:var(--cc-calma-tx)}
+.live-pill i{width:9px;height:9px;border-radius:50%;background:var(--cc-calma);animation:pulse 1.2s infinite}
+@media (max-width:1100px){.herd{grid-template-columns:90px minmax(0,1fr) 110px;}.herd .hide-s{display:none}}
+
+/* Map + charts */
+.figure{border:1px solid var(--cc-linea);border-radius:var(--cc-radio);padding:14px;background:var(--cc-crema);min-width:0}
+.figure h3{font-size:17px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.figure svg.chart{width:100%;height:auto;display:block}
+.svgtx{fill:var(--cc-gris);font-family:var(--cc-font-dato);font-size:20px}
+.svgtx2{fill:var(--cc-tinta);font-family:var(--cc-font-texto);font-size:21px;font-weight:600}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:64px 18px minmax(0,1fr);gap:10px;align-items:start;padding:6px 0;position:relative}
+.timeline li .tm{font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris);text-align:right}
+.timeline li .dot{width:14px;height:14px;border-radius:50%;background:var(--st);margin-top:4px;border:2px solid var(--cc-crema);box-shadow:0 0 0 2px var(--st)}
+.timeline li:not(:last-child)::after{content:"";position:absolute;left:82px;top:24px;bottom:-6px;width:2px;background:var(--cc-linea)}
+.timeline li b{font-weight:600}
+.timeline li .d{font-size:15px;color:var(--cc-gris)}
+.timeline li.new{animation:flash .6s 2}
+
+/* Reception */
+.tags{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.tagc{min-height:48px;border-radius:10px;border:1.5px solid var(--cc-linea);background:var(--cc-crema);font-family:var(--cc-font-dato);font-size:15px;font-weight:700;color:var(--cc-gris)}
+.tagc.read{background:var(--cc-calma-bg);border-color:var(--cc-calma);color:var(--cc-calma-tx)}
+.tagc.sel{outline:3px solid var(--cc-tinta);outline-offset:1px}
+.tagc.fall{background:var(--cc-alerta-bg);border-color:var(--cc-alerta);color:var(--cc-alerta-tx)}
+.meter{height:12px;border-radius:99px;background:var(--cc-fondo2);overflow:hidden;border:1px solid var(--cc-linea)}
+.meter i{display:block;height:100%;background:var(--cc-calma);transition:width .2s}
+.rangebar{position:relative;height:14px;border-radius:99px;background:var(--cc-fondo2);border:1px solid var(--cc-linea);margin:18px 0 26px}
+.rangebar .ok{position:absolute;top:0;bottom:0;background:var(--cc-calma-bg);border-left:2px solid var(--cc-calma);border-right:2px solid var(--cc-calma)}
+.rangebar .mk{position:absolute;top:-8px;width:4px;height:28px;border-radius:2px;background:var(--cc-tinta)}
+.rangebar .lb{position:absolute;top:18px;font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris);transform:translateX(-50%)}
+
+/* Checklist */
+.ck{display:grid;gap:8px}
+.ck h4{font-size:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;margin-top:6px}
+.ck h4 span{font-family:var(--cc-font-texto);font-weight:500;font-size:15px;color:var(--cc-gris)}
+.ckrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;border:1px solid var(--cc-linea);border-radius:12px;padding:10px 12px;background:var(--cc-blanco)}
+.ckrow .t{font-weight:600}
+.ckrow .art{font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris)}
+.ckrow .ev{grid-column:1 / -1;font-size:15px;color:var(--cc-gris)}
+.ckrow.flash{animation:flash .5s 1}
+
+/* Report */
+.repgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px}
+@media (max-width:1000px){.repgrid{grid-template-columns:minmax(0,1fr)}}
+.bigix{display:flex;gap:16px;align-items:center;border-radius:var(--cc-radio);padding:16px;background:var(--st-bg);border:2px solid var(--st)}
+.bigix .n{font-family:var(--cc-font-dato);font-weight:700;font-size:64px;line-height:1;color:var(--st-tx)}
+.bigix .w{font-family:var(--cc-font-titulo);font-weight:800;font-size:24px;color:var(--st-tx)}
+.scale{height:10px;border-radius:99px;background:linear-gradient(90deg,var(--cc-alerta) 0 40%,var(--cc-atencion) 40% 70%,var(--cc-calma) 70%);position:relative;margin:10px 0 22px}
+.scale i{position:absolute;top:-6px;width:4px;height:22px;background:var(--cc-tinta);border-radius:2px;transform:translateX(-2px)}
+.scale span{position:absolute;top:14px;font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris);transform:translateX(-50%)}
+.pts{width:100%;border-collapse:collapse;font-size:15px}
+.pts td{padding:6px 0;border-bottom:1px solid var(--cc-linea)}
+.pts td:last-child{text-align:right;font-family:var(--cc-font-dato);font-weight:700}
+.pts tr.tot td{border-bottom:0;font-weight:700}
+.qrbox{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.qr{width:150px;height:150px;background:#fff;border-radius:12px;padding:8px;border:1px solid var(--cc-linea);flex:none;display:flex;align-items:center;justify-content:center;color:#14201B;font-size:15px;text-align:center}
+.qr svg{width:100%;height:100%}
+.url{font-family:var(--cc-font-dato);font-size:15px;word-break:break-all;color:var(--cc-gris);user-select:all}
+.verdicts{display:grid;gap:8px}
+.verdict{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:var(--cc-crema);border:1px solid var(--cc-linea)}
+.note{font-size:15px;color:var(--cc-gris);margin:0}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:170px minmax(0,1fr) 48px;gap:12px;align-items:center}
+.barrow .tr{height:22px;border-radius:6px;background:var(--cc-fondo2);overflow:hidden}
+.barrow .tr i{display:block;height:100%;background:var(--st)}
+.barrow .v{font-family:var(--cc-font-dato);font-weight:700;text-align:right;color:var(--st-tx)}
+@media (max-width:600px){.barrow{grid-template-columns:110px minmax(0,1fr) 40px}}
+.tbl{overflow-x:auto}
+.tbl table{width:100%;border-collapse:collapse;font-size:15px;min-width:560px}
+.tbl th{background:var(--cc-pasto);color:#F5F1E8;font-family:var(--cc-font-titulo);text-align:left;padding:10px 12px;font-weight:700}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--cc-linea);vertical-align:top}
+.empty{border:1.5px dashed var(--cc-linea);border-radius:var(--cc-radio);padding:24px;text-align:center;display:grid;gap:10px;justify-items:center;color:var(--cc-gris)}
+
+/* Toast */
+.toasts{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;z-index:30;max-width:min(420px,calc(100vw - 32px))}
+.toast{background:var(--cc-tinta);color:var(--cc-crema);border-radius:12px;padding:12px 16px;box-shadow:0 8px 24px rgba(0,0,0,.2);font-size:15px;display:flex;gap:10px;align-items:flex-start;animation:tin .25s ease-out}
+.toast .ico{color:var(--cc-menta);margin-top:1px}
+@keyframes tin{from{transform:translateY(12px);opacity:0}}
+
+/* Public certificate (EN) */
+.cert{max-width:760px;margin:0 auto;padding-block:24px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (max-width:560px){.ckrow{grid-template-columns:minmax(0,1fr)}.ckrow .chip{justify-self:start}.chip{white-space:normal}.bigix{flex-wrap:wrap}}
+.cert .head{background:var(--cc-pasto);color:#F5F1E8;border-radius:20px;padding:24px;display:grid;gap:8px}
+.cert .head h1{font-size:30px;font-weight:800}
+.cert .head .mono{color:var(--cc-menta)}
+.badge-demo{display:inline-block;font-family:var(--cc-font-dato);font-size:15px;background:var(--cc-fondo2);color:var(--cc-gris);border-radius:8px;padding:4px 10px}
+footer.foot{padding-block:8px 32px;font-size:15px;color:var(--cc-gris)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="iso" viewBox="0 0 120 120">
+<ellipse cx="22" cy="44" rx="17" ry="9" transform="rotate(-20 22 44)" fill="var(--a)"/>
+<ellipse cx="98" cy="44" rx="17" ry="9" transform="rotate(20 98 44)" fill="var(--a)"/>
+<path d="M38 30 C34 20 38 13 46 12" fill="none" stroke="var(--a)" stroke-width="6" stroke-linecap="round"/>
+<path d="M82 30 C86 20 82 13 74 12" fill="none" stroke="var(--a)" stroke-width="6" stroke-linecap="round"/>
+<rect x="30" y="26" width="60" height="74" rx="28" fill="var(--a)"/>
+<rect x="34" y="70" width="52" height="34" rx="17" fill="var(--b)"/>
+<circle cx="50" cy="86" r="4" fill="var(--a)"/><circle cx="70" cy="86" r="4" fill="var(--a)"/>
+<path d="M41 54 Q47 60 53 54" fill="none" stroke="var(--b)" stroke-width="4.5" stroke-linecap="round"/>
+<path d="M67 54 Q73 60 79 54" fill="none" stroke="var(--b)" stroke-width="4.5" stroke-linecap="round"/>
+</symbol>
+<symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+<symbol id="i-temp" viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></symbol>
+<symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-nfc" viewBox="0 0 24 24"><path d="M6 8.32a7.43 7.43 0 0 1 0 7.36"/><path d="M9.46 6.21a11.76 11.76 0 0 1 0 11.58"/><path d="M12.91 4.1a15.91 15.91 0 0 1 .01 15.8"/><path d="M16.37 2a20.16 20.16 0 0 1 0 20"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
+</defs></svg>
+
+<header class="appbar">
+  <div class="wrap">
+    <div class="brand"><svg width="40" height="40" style="--a:var(--cc-menta);--b:#1F4D3A"><use href="#iso"/></svg><span>Chill <b>Cow</b></span></div>
+    <span class="tag">Prototipo · datos ficticios</span>
+    <span class="sp"></span>
+    <div class="modes" id="modes" role="group" aria-label="Modo de demo"><button type="button" id="mFull" aria-pressed="true">Demo completa</button><button type="button" id="mPitch" aria-pressed="false">Modo pitch</button></div>
+    <button class="btn g" id="btnCert" type="button"><svg class="ico"><use href="#i-shield"/></svg>Certificado público</button>
+    <button class="btn g" id="btnReset" type="button"><svg class="ico"><use href="#i-reset"/></svg>Reiniciar demo</button>
+  </div>
+</header>
+<nav class="pitchbar" id="pitchbar" aria-label="Pasos del modo pitch" hidden>
+  <div class="wrap">
+    <span class="pb-l">Modo pitch</span>
+    <button class="pstep" type="button" data-step="1">1 · Carga</button>
+    <button class="pstep" type="button" data-step="2">2 · Viaje</button>
+    <button class="pstep" type="button" data-step="3">3 · Llegada</button>
+    <button class="pstep" type="button" data-step="4">4 · Informe</button>
+    <button class="pstep" type="button" data-step="5">Certificado</button>
+    <span class="sp"></span>
+    <button class="btn p" id="pbNext" type="button">Siguiente →</button>
+  </div>
+</nav>
+
+<main id="demoView" class="wrap demo">
+  <section aria-label="Celular del chofer">
+    <div class="colhead"><svg class="ico"><use href="#i-truck"/></svg>Celular del chofer</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="pscreen" id="phone"></div>
+      <div class="bezel"><button class="demo-dot" id="demoDot" type="button" aria-label="Controles de demo" title="Controles de demo (tecla F: frenada)">···</button></div>
+    </div>
+    <div class="drawer" id="drawer" hidden>
+      <p>Controles de demo (no los ve el chofer)</p>
+      <button class="btn d" id="dFren" type="button"><svg class="ico"><use href="#i-alert"/></svg>Simular frenada brusca</button>
+      <button class="btn s" id="dCurva" type="button">Simular curva brusca</button>
+      <button class="btn g" id="dFwd" type="button">Adelantar 30 min</button>
+      <p>Guion: iniciar, 1 frenada, "Llegué", leer caravanas, marcar la 07. Final: índice 67, Atención.</p>
+    </div>
+  </section>
+  <section aria-label="Panel del frigorífico" style="min-width:0">
+    <div class="colhead"><svg class="ico"><use href="#i-scan"/></svg>Panel del frigorífico · Frigorífico Exportador Demo</div>
+    <div class="panel">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="pbody" id="panel"></div>
+    </div>
+  </section>
+</main>
+
+<main id="certView" class="wrap" hidden></main>
+<footer class="wrap foot" id="foot">Chill Cow · prototipo para Hack to the Future 2026 · tropas, campos, transportistas y frigorífico ficticios · la lectura NFC y el acelerómetro se simulan con clics.</footer>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(function(){
+'use strict';
+// Public certificate URL encoded in the QR. Set after publishing.
+var CERT_URL = 'https://claude.ai/artifact/3h6sa3s4rEHHHWAi8ckqNs#cert';
+var TRIP_MIN = 250;          // T-0418: 4 h 10 min
+var START = 9*60+30;         // 09:30 load time
+var AUTO = [{m:52,type:'curva'},{m:128,type:'frenada'}];
+var CAIDO_0418 = 7;
+
+var HERDS = {
+  'T-0417':{id:'T-0417',origen:'Estancia El Cañadón',zona:'centro de Córdoba',transp:'Transportes Demo A',cab:34,peso:450,jaula:52,km:140,dur:150,tmax:26,tfuera:0,fren:0,curv:1,caidos:0,caidoTag:null,carga:'05:50',llegada:'08:20',corral:'1 h 05 min',temp:{base:19,D:150,p:1},ev:[{m:70,type:'curva'}]},
+  'T-0418':{id:'T-0418',origen:'Campo La Aguada',zona:'sur de Córdoba',transp:'Transportes Demo B',cab:36,peso:450,jaula:52,km:230,dur:250,tmax:29,tfuera:0,fren:2,curv:1,caidos:1,caidoTag:'032 0000 0418 07',carga:'09:30',llegada:'13:40',corral:'0 h 20 min',temp:{base:22,D:300,p:1},ev:[{m:52,type:'curva'},{m:128,type:'frenada'},{m:171,type:'frenada'}]},
+  'T-0419':{id:'T-0419',origen:'Establecimiento Los Tres Ombués',zona:'oeste de Buenos Aires',transp:'Transportes Demo C',cab:38,peso:470,jaula:52,km:610,dur:560,tmax:37,tfuera:2,fren:3,curv:2,caidos:1,caidoTag:'032 0000 0419 22',carga:'21:40',llegada:'07:00',corral:'1 h 30 min',temp:{base:24,D:560,p:12},ev:[{m:95,type:'frenada'},{m:180,type:'curva'},{m:260,type:'frenada'},{m:410,type:'frenada'},{m:480,type:'curva'}]}
+};
+
+var S,GEN=0;
+function fresh(){GEN++;
+  return {phase:'inicio',nfc:'idle',sim:0,fren:0,curv:0,events:[],autoDone:{},tags:0,reading:false,caidos:[],received:false,tab:'entrantes',sel:'T-0418',selTag:CAIDO_0418,drawer:false,lastAlert:null,lastAlertAt:0,newEv:-1,flashCk:false};
+}
+S = fresh();
+
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id);}
+function ico(n,cls){return '<svg class="ico'+(cls?' '+cls:'')+'" aria-hidden="true"><use href="#i-'+n+'"/></svg>';}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function fmtDur(m){m=Math.round(m);return Math.floor(m/60)+' h '+String(m%60).padStart(2,'0')+' min';}
+function clock(min){min=((Math.round(min)%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0');}
+function dec(n,d){return n.toFixed(d===undefined?2:d).replace('.',',');}
+function tag(n,herd){return '032 0000 '+(herd||'0418')+' '+String(n).padStart(2,'0');}
+function state(ix){return ix>=70?'calma':ix>=40?'atencion':'alerta';}
+var WORD={calma:'Calma',atencion:'Atención',alerta:'Alerta'};
+var WORD_EN={calma:'Calm',atencion:'Attention',alerta:'Alert'};
+function tempAt(h,m){var t=h.temp;return t.base+(h.tmax-t.base)*Math.pow(Math.max(0,Math.sin(Math.PI*m/t.D)),t.p);}
+
+// Live T-0418 snapshot shaped like a static herd
+function live(){
+  var h=HERDS['T-0418'];
+  var tmax=0;for(var m=0;m<=S.sim;m+=5){tmax=Math.max(tmax,tempAt(h,m));}
+  return Object.assign({},h,{isLive:true,dur:S.sim,tmax:Math.round(tmax),fren:S.fren,curv:S.curv,caidos:S.caidos.length,caidoTag:S.caidos.length?tag(S.caidos[0]):null,ev:S.events.filter(function(e){return e.type==='curva'||e.type==='frenada';})});
+}
+function herd(id){return id==='T-0418'?live():HERDS[id];}
+
+// Welfare index = 100 - risk points (rules from the brief, decision of 12/11)
+function score(h){
+  var it=[];var space=h.jaula/h.cab;
+  if(h.dur>480) it.push({g:'cond',t:'Viaje de más de 8 h',p:20});
+  if(h.dur>840) it.push({g:'cond',t:'Más de 14 h sin parada de 1 h',p:40});
+  if(h.tfuera) it.push({g:'cond',t:h.tfuera+' h fuera de 5–30 °C',p:Math.min(30,10*h.tfuera)});
+  if(space<1.3||space>1.6) it.push({g:'cond',t:'Espacio fuera de rango',p:15});
+  if(h.fren) it.push({g:'acc',t:h.fren+(h.fren>1?' frenadas bruscas':' frenada brusca'),p:Math.min(25,5*h.fren)});
+  if(h.curv) it.push({g:'acc',t:h.curv+(h.curv>1?' curvas bruscas':' curva brusca'),p:Math.min(15,3*h.curv)});
+  if(h.caidos) it.push({g:'acc',t:h.caidos+(h.caidos>1?' animales caídos':' animal caído')+' a la llegada',p:Math.min(40,20*h.caidos)});
+  var acc=0,cond=0;it.forEach(function(x){if(x.g==='acc')acc+=x.p;else cond+=x.p;});
+  var tot=Math.min(100,acc+cond);
+  return {items:it,acc:acc,cond:cond,total:tot,ix:100-tot,accIx:100-acc,condIx:100-cond};
+}
+
+// Herd phase for live herd
+function liveStage(){
+  if(S.received) return 'recibida';
+  if(S.phase==='fin') return 'llego';
+  if(S.phase==='viaje') return 'viaje';
+  return 'espera';
+}
+
+/* ---------- EU checklist ---------- */
+// status: ok | obs | no | pend | info
+function checklist(id){
+  var h=herd(id),isLive=id==='T-0418';
+  var stage=isLive?liveStage():'recibida';
+  var tripDone=stage==='llego'||stage==='recibida';
+  var started=stage!=='espera';
+  var space=h.jaula/h.cab;
+  var tagsOk=isLive?(S.tags>=h.cab):true;
+  var trip=[], must=[];
+  trip.push({t:'Tiempo de viaje',art:'Reg. (CE) 1/2005, Anexo I, cap. V, 1.2 y 1.4',
+    st:!tripDone?'pend':(h.dur>480?'no':'ok'),
+    ev:!started?'Se mide desde la carga hasta la descarga.':(!tripDone?'En viaje: '+fmtDur(h.dur)+' (máximo 8 h en camión estándar)':fmtDur(h.dur)+' de viaje · máximo 8 h en camión estándar')});
+  trip.push({t:'Temperatura en el viaje',art:'Reg. (CE) 1/2005, Anexo I, cap. VI, 3.1',
+    st:!tripDone?'pend':(h.tfuera?'no':'ok'),
+    ev:!started?'Clima en ruta por el GPS del celular del chofer.':'Máxima '+h.tmax+' °C'+(h.tfuera?' · '+h.tfuera+' h fuera de la franja':'')+' · franja 5–30 °C'});
+  trip.push({t:'Espacio por animal',art:'Reg. (CE) 1/2005, Anexo I, cap. VII',
+    st:!started?'pend':((space>=1.3&&space<=1.6)?'ok':'no'),
+    ev:!started?'Cabezas del DT-e sobre m² de la jaula.':dec(space)+' m² por animal ('+h.cab+' cabezas en '+h.jaula+' m²) · rango 1,3–1,6 m² para ~'+h.peso+' kg'});
+  trip.push({t:'Manejo durante el viaje',art:'Reg. (CE) 1/2005, Anexo I, cap. III, 1.8',
+    st:!started?'pend':'info',
+    ev:!started?'Frenadas y curvas bruscas por el acelerómetro del celular.':(h.fren+' frenadas y '+h.curv+' curvas bruscas registradas · buena práctica, sin umbral')});
+  must.push({t:'Evaluación del envío a la llegada',art:'Reg. (CE) 1099/2009, Anexo III, 1.1',
+    st:(tripDone&&tagsOk)?'ok':'pend',
+    ev:(tripDone&&tagsOk)?'Informe de la tropa disponible antes de la descarga · '+h.cab+'/'+h.cab+' caravanas':'Se completa al leer las caravanas en la recepción.'});
+  must.push({t:'Animales caídos o que no caminan',art:'Reg. (CE) 1099/2009, Anexo III, 1.11',
+    st:!(tripDone&&tagsOk)?'pend':(h.caidos?'obs':'ok'),
+    ev:!(tripDone&&tagsOk)?'Marca del operario o cámara de la rampa.':(h.caidos?h.caidos+' animal caído atendido en el lugar, sin arrastre · caravana '+h.caidoTag:'Sin animales caídos')});
+  must.push({t:'Descarga y espera en corral',art:'Reg. (CE) 1099/2009, Anexo III, 1.2',
+    st:stage==='recibida'?'ok':'pend',
+    ev:stage==='recibida'?'Descarga '+h.llegada+' · '+h.corral+' en corral · alerta de alimento a las 12 h':'Hora de llegada contra hora de faena.'});
+  must.push({t:'Agua en corrales',art:'Reg. (CE) 1099/2009, Anexo III, 1.6',
+    st:(tripDone&&tagsOk)?'ok':'pend',
+    ev:(tripDone&&tagsOk)?'Corral 4 con agua permanente (registro de la planta)':'Registro de bebederos de la planta.'});
+  return {trip:trip,must:must};
+}
+function verdict(list){
+  if(list.some(function(x){return x.st==='no';})) return 'no';
+  if(list.some(function(x){return x.st==='pend';})) return 'pend';
+  if(list.some(function(x){return x.st==='obs';})) return 'obs';
+  return 'ok';
+}
+var CK={ok:['calma','Cumple','check'],obs:['atencion','Cumple con observación','alert'],no:['alerta','No cumple','x'],pend:['pend','Pendiente','clock'],info:['info','Registrado','activity']};
+var CK_EN={ok:['calma','Meets','check'],obs:['atencion','Meets, with a note','alert'],no:['alerta','Does not meet','x'],pend:['pend','Pending','clock'],info:['info','Recorded','activity']};
+function ckChip(st,en){var c=(en?CK_EN:CK)[st];return '<span class="chip st-'+c[0]+'">'+ico(c[2])+c[1]+'</span>';}
+function ckRows(list){return list.map(function(x){return '<div class="ckrow"><div><div class="t">'+x.t+'</div><div class="art">'+x.art+'</div></div>'+ckChip(x.st)+'<div class="ev">'+x.ev+'</div></div>';}).join('');}
+function ckBlock(id){
+  var c=checklist(id);
+  return '<div class="ck"><h4>Obligatorio para exportar <span>Reg. (CE) 1099/2009, art. 12: equivalencia exigida a la planta</span></h4>'+ckRows(c.must)+
+    '<h4>Viaje: referencia UE <span>Reg. (CE) 1/2005 rige solo dentro de la UE; se usa como vara de referencia</span></h4>'+ckRows(c.trip)+'</div>';
+}
+
+/* ---------- phone ---------- */
+function renderPhone(){
+  var h=HERDS['T-0418'],el=$('phone');
+  var top='<div class="ptop"><svg width="28" height="28" style="--a:var(--cc-pasto);--b:var(--cc-menta)"><use href="#iso"/></svg>Chill <b>Cow</b><span class="t">'+clock(START+(S.phase==='inicio'?-12:S.sim))+'</span></div>';
+  if(S.phase==='inicio'){
+    var n=S.nfc;
+    el.innerHTML=top+
+      '<div><div class="muted">Tropa de hoy (DT-e)</div><h2 class="num" style="font-size:30px">'+h.id+'</h2></div>'+
+      '<div class="card"><dl class="kv"><dt>Origen</dt><dd>'+h.origen+'</dd><dt>Destino</dt><dd>Frigorífico Exportador Demo</dd><dt>Cabezas</dt><dd class="num">'+h.cab+' novillos</dd><dt>Jaula</dt><dd class="num">'+h.jaula+' m²</dd></dl></div>'+
+      '<button type="button" id="nfcBtn" class="nfc '+(n==='reading'?'reading':n==='ok'?'ok':'')+'">'+
+        (n==='ok'?ico('check')+'<h3>Caravana leída</h3><div class="num">'+tag(1)+'</div><div>Coincide con el DT-e</div>'
+         :ico('nfc')+'<h3>'+(n==='reading'?'Leyendo caravana…':'Acercá el celular a la caravana')+'</h3><div class="muted">Lectura NFC de la caravana SENASA</div>')+
+      '</button>'+
+      '<div style="margin-top:auto"><button type="button" id="startBtn" class="btn p bigbtn" '+(n==='ok'?'':'disabled')+'>Iniciar viaje</button></div>';
+    var b=$('nfcBtn');if(b) b.onclick=readNfc;
+    var s=$('startBtn');if(s) s.onclick=startTrip;
+    return;
+  }
+  if(S.phase==='viaje'){
+    var sc=score(live()),st=state(sc.ix);
+    var alert='';
+    if(S.lastAlert && Date.now()-S.lastAlertAt<7000){
+      alert='<div class="palert st-atencion flash"><b>'+S.lastAlert+'</b><span>Manejá suave. No hace falta tocar nada.</span></div>';
+    }
+    var arriving=S.sim>=TRIP_MIN;
+    el.innerHTML=top+
+      '<div class="status-ring st-'+st+'"><div class="l">Tropa '+h.id+'</div><div class="n">'+sc.ix+'</div><div class="w">'+WORD[st]+'</div></div>'+
+      alert+
+      '<div class="pstats"><div class="pstat"><div class="k">En viaje</div><div class="v">'+fmtDur(S.sim)+'</div></div><div class="pstat"><div class="k">Llegada</div><div class="v">'+clock(START+TRIP_MIN)+'</div></div><div class="pstat"><div class="k">Temp. ruta</div><div class="v" style="color:var(--cc-temp)">'+Math.round(tempAt(h,S.sim))+' °C</div></div><div class="pstat"><div class="k">Km</div><div class="v">'+Math.round(h.km*S.sim/TRIP_MIN)+'</div></div></div>'+
+      '<div style="margin-top:auto;display:grid;gap:8px">'+(arriving?'<div class="palert st-calma"><b>Llegaste a destino</b><span>Tocá "Llegué" en la rampa.</span></div>':'')+'<button type="button" id="arriveBtn" class="btn p bigbtn">Llegué</button></div>';
+    $('arriveBtn').onclick=arrive;
+    return;
+  }
+  // fin
+  var sc2=score(live()),st2=state(sc2.ix);
+  el.innerHTML=top+
+    '<div class="status-ring st-calma"><div class="l">Tropa '+h.id+'</div>'+ico('check')+'<div class="w">Viaje entregado</div><div class="l">'+fmtDur(TRIP_MIN)+' · '+h.km+' km</div></div>'+
+    '<div class="palert st-calma"><b>Listo, gracias</b><span>La planta ya tiene los datos del viaje. Entregá la tropa en la rampa.</span></div>'+
+    '<div class="card"><dl class="kv"><dt>Frenadas bruscas</dt><dd class="num">'+S.fren+'</dd><dt>Curvas bruscas</dt><dd class="num">'+S.curv+'</dd><dt>Temp. máxima</dt><dd class="num">'+live().tmax+' °C</dd></dl></div>';
+}
+
+function readNfc(){
+  if(S.nfc!=='idle') return;
+  S.nfc='reading';renderPhone();var g=GEN;
+  setTimeout(function(){if(g!==GEN)return;S.nfc='ok';try{navigator.vibrate&&navigator.vibrate(80);}catch(e){}renderPhone();},1100);
+}
+function startTrip(){
+  if(S.nfc!=='ok') return;
+  S.phase='viaje';S.sim=0;
+  S.events=[{m:0,type:'carga'}];S.tab='detalle';S.sel='T-0418';
+  toast('truck','T-0418 salió de Campo La Aguada: 36 cabezas según DT-e, caravana verificada.');
+  renderAll();
+}
+function addEvent(type,auto){
+  if(S.phase!=='viaje') return;
+  if(type==='frenada') S.fren++; else S.curv++;
+  S.events.push({m:S.sim,type:type,auto:!!auto});
+  S.newEv=S.events.length-1;
+  var km=Math.round(HERDS['T-0418'].km*S.sim/TRIP_MIN);
+  S.lastAlert=(type==='frenada'?'Frenada brusca':'Curva brusca')+' registrada';S.lastAlertAt=Date.now();
+  try{navigator.vibrate&&navigator.vibrate([120,60,120]);}catch(e){}
+  toast('alert','T-0418: '+(type==='frenada'?'frenada brusca':'curva brusca')+' a las '+clock(START+S.sim)+', km '+km+'.');
+  renderAll();
+}
+function runAutos(){
+  AUTO.forEach(function(a,i){if(!S.autoDone[i]&&S.sim>=a.m){S.autoDone[i]=true;var save=S.sim;S.sim=a.m;addEvent(a.type,true);S.sim=save;}});
+}
+function arrive(){
+  if(S.phase!=='viaje') return;
+  if(S.sim<TRIP_MIN){S.sim=TRIP_MIN;runAutos();}
+  S.events.sort(function(a,b){return a.m-b.m;});
+  S.events.push({m:TRIP_MIN,type:'llegada'});
+  S.phase='fin';S.lastAlert=null;
+  toast('pin','T-0418 llegó a la rampa a las '+clock(START+TRIP_MIN)+'. Lista para recibir.');
+  renderAll();
+}
+
+/* ---------- panel tabs ---------- */
+var TABS=[['entrantes','Tropas entrantes'],['detalle','Tropa en viaje'],['recepcion','Recepción'],['informe','Informe UE'],['cierre','Cierre con la res'],['cert','Certificado (EN)']];
+function renderTabs(){
+  $('tabs').innerHTML=TABS.map(function(t){return '<button type="button" role="tab" data-tab="'+t[0]+'" aria-selected="'+(S.tab===t[0])+'">'+t[1]+'</button>';}).join('');
+  Array.prototype.forEach.call($('tabs').querySelectorAll('button'),function(b){b.onclick=function(){S.tab=b.dataset.tab;if(S.tab==='detalle'||S.tab==='recepcion')S.sel='T-0418';renderPanel();renderTabs();};});
+}
+function renderPanel(){
+  var f={entrantes:pEntrantes,detalle:pDetalle,recepcion:pRecepcion,informe:pInforme,cierre:pCierre,cert:pCertPreview}[S.tab];
+  $('panel').innerHTML=f();
+  bindPanel();
+  if(S.tab==='detalle') placeMap();
+}
+function chipState(ix){var s=state(ix);return '<span class="chip st-'+s+'"><i></i>'+WORD[s]+'</span>';}
+
+function pEntrantes(){
+  var h8=live(),sc8=score(h8),stage=liveStage();
+  var row=function(id,status,sub,ix,st,isLive){
+    return '<button type="button" class="herd st-'+st+'" data-open="'+id+'"><span class="id">'+id+'</span>'+
+      '<span class="o"><b>'+HERDS[id].origen+'</b><span>'+HERDS[id].zona+' · '+HERDS[id].cab+' novillos</span></span>'+
+      '<span class="e hide-s"><b style="display:block;font-weight:600">'+HERDS[id].transp+'</b><span>'+sub+'</span></span>'+
+      '<span class="hide-s">'+status+'</span>'+
+      '<span class="ix">'+(ix===null?'<span class="chip st-pend">Sin datos</span>':ix+' <span class="chip st-'+st+'" style="font-family:var(--cc-font-texto)"><i></i>'+WORD[st]+'</span>')+'</span>'+
+      ico('chev')+'</button>';
+  };
+  var l8;
+  if(stage==='espera') l8=row('T-0418','<span class="chip st-pend">Esperando carga</span>','Carga prevista '+HERDS['T-0418'].carga,null,'pend');
+  else if(stage==='viaje') l8=row('T-0418','<span class="live-pill"><i></i>En viaje</span>','Llega '+clock(START+TRIP_MIN)+' · '+fmtDur(S.sim),sc8.ix,state(sc8.ix));
+  else if(stage==='llego') l8=row('T-0418','<span class="chip st-info">En la rampa</span>','Llegó '+clock(START+TRIP_MIN),sc8.ix,state(sc8.ix));
+  else l8=row('T-0418','<span class="chip st-pend">Recibida</span>','Recibida '+clock(START+TRIP_MIN+20),sc8.ix,state(sc8.ix));
+  var s7=score(HERDS['T-0417']),s9=score(HERDS['T-0419']);
+  var enViaje=stage==='viaje'?1:0;
+  return '<div class="ph"><h2>Tropas entrantes</h2><span class="sp"></span><span class="muted mono">Hoy · 12/11/2026</span><div class="sub">Tropas en viaje y recibidas hoy. El índice de bienestar va de 0 a 100: 100 es un viaje perfecto.</div></div>'+
+    '<div class="grid3"><div class="kpi"><span class="k">En viaje</span><span class="v">'+enViaje+'</span></div><div class="kpi"><span class="k">Por recibir</span><span class="v">'+(stage==='recibida'?0:1)+'</span></div><div class="kpi"><span class="k">Recibidas hoy</span><span class="v">'+(stage==='recibida'?3:2)+'</span></div></div>'+
+    '<div class="herds">'+l8+
+      row('T-0417','<span class="chip st-pend">Recibida</span>','Recibida '+HERDS['T-0417'].llegada,s7.ix,state(s7.ix))+
+      row('T-0419','<span class="chip st-pend">Recibida</span>','Recibida '+HERDS['T-0419'].llegada,s9.ix,state(s9.ix))+
+    '</div><p class="note">Colores de estado: Calma 70–100 · Atención 40–69 · Alerta menos de 40. Siempre con número y palabra.</p>';
+}
+
+function evLabel(e){return {carga:'Carga y salida',curva:'Curva brusca',frenada:'Frenada brusca',llegada:'Llegada a la rampa',caido:'Animal caído en la descarga'}[e.type];}
+function evState(e){return e.type==='curva'||e.type==='frenada'?'atencion':e.type==='caido'?'alerta':'calma';}
+function evDetail(e,h){
+  if(e.type==='carga') return 'Caravana leída por NFC · '+h.cab+' cabezas según DT-e';
+  if(e.type==='llegada') return h.km+' km · '+fmtDur(h.isLive?TRIP_MIN:h.dur);
+  if(e.type==='caido') return 'Caravana '+h.caidoTag;
+  var km=Math.round(h.km*e.m/(h.isLive?TRIP_MIN:h.dur));
+  return (e.type==='frenada'?'Desaceleración mayor a 0,4 g':'Aceleración lateral mayor a 0,3 g')+' · km '+km+' · +'+(e.type==='frenada'?5:3)+' puntos';
+}
+function herdEvents(h){
+  if(h.isLive){
+    var evs=S.events.slice();
+    if(S.caidos.length) evs.push({m:TRIP_MIN+15,type:'caido'});
+    return evs;
+  }
+  var evs2=[{m:0,type:'carga'}].concat(h.ev).concat([{m:h.dur,type:'llegada'}]);
+  if(h.caidos) evs2.push({m:h.dur+15,type:'caido'});
+  return evs2;
+}
+function startOf(h){var p=h.carga.split(':');return (+p[0])*60+(+p[1]);}
+
+function pDetalle(){
+  var id=S.sel,h=herd(id),stage=h.isLive?liveStage():'recibida';
+  if(h.isLive&&stage==='espera'){
+    return '<div class="ph"><h2>Tropa T-0418</h2><span class="sp"></span><span class="chip st-pend">Esperando carga</span><div class="sub">'+h.origen+' → Frigorífico Exportador Demo · '+h.transp+'</div></div>'+
+      '<div class="empty">'+ico('truck')+'<b style="color:var(--cc-tinta)">El viaje todavía no empezó</b><span>Aparece acá cuando el chofer lea la caravana y toque "Iniciar viaje".</span></div>';
+  }
+  var sc=score(h),st=state(sc.ix);
+  var axis=h.isLive?TRIP_MIN:h.dur;
+  var evs=herdEvents(h);
+  var t0=startOf(h);
+  var tl=evs.map(function(e,i){return '<li class="st-'+evState(e)+(h.isLive&&i===S.newEv?' new':'')+'"><span class="tm">'+clock(t0+e.m)+'</span><span class="dot"></span><span><b>'+evLabel(e)+'</b><div class="d">'+evDetail(e,h)+'</div></span></li>';}).reverse().join('');
+  var hdrChip=h.isLive&&stage==='viaje'?'<span class="live-pill"><i></i>En viaje · '+fmtDur(S.sim)+'</span>':'<span class="chip st-pend">'+(stage==='llego'?'En la rampa':'Viaje terminado')+'</span>';
+  return '<div class="ph"><h2>Tropa '+id+'</h2>'+hdrChip+'<span class="sp"></span>'+
+    '<div class="sub">'+h.origen+', '+h.zona+' → Frigorífico Exportador Demo · '+h.transp+' · '+h.cab+' novillos ~'+h.peso+' kg</div></div>'+
+    '<div class="grid3">'+
+      '<div class="kpi st-'+st+'" style="background:var(--st-bg);border-color:var(--st)"><span class="k">Índice de bienestar</span><span class="v" style="color:var(--st-tx)">'+sc.ix+' <small style="color:var(--st-tx)">'+WORD[st]+'</small></span></div>'+
+      '<div class="kpi"><span class="k">Accidentes</span><span class="v">'+sc.accIx+' <small>/ 100</small></span></div>'+
+      '<div class="kpi"><span class="k">Condiciones del viaje</span><span class="v">'+sc.condIx+' <small>/ 100</small></span></div>'+
+    '</div>'+
+    '<div class="grid2">'+
+      '<div class="figure"><h3>'+ico('pin')+'Recorrido</h3>'+mapSvg(h)+'</div>'+
+      '<div class="figure"><h3>'+ico('temp')+'Temperatura en ruta</h3>'+tempSvg(h,axis)+'<p class="note">Franja de referencia UE: 5 a 30 °C (Reg. 1/2005, Anexo I, cap. VI, 3.1). Fuente: clima en ruta por GPS del celular.</p></div>'+
+    '</div>'+
+    '<div class="grid2">'+
+      '<div class="figure"><h3>'+ico('activity')+'Línea de tiempo del viaje</h3><ol class="timeline">'+tl+'</ol></div>'+
+      '<div class="figure"><h3>'+ico('clock')+'Horas de viaje</h3>'+
+        '<div class="kpi" style="background:var(--cc-blanco)"><span class="k">'+(stage==='viaje'?'Transcurrido':'Total')+'</span><span class="v">'+fmtDur(h.dur)+' <small>de 8 h máximo</small></span></div>'+
+        '<div class="meter" style="margin-top:12px" aria-label="Horas sobre el máximo de 8 h"><i style="width:'+Math.min(100,h.dur/480*100)+'%;background:'+(h.dur>480?'var(--cc-alerta)':'var(--cc-calma)')+'"></i></div>'+
+        '<p class="note" style="margin-top:8px">Referencia UE: 8 h en camión estándar; 14 + 1 + 14 h en camión equipado (Reg. 1/2005, Anexo I, cap. V, 1.2 y 1.4).</p>'+
+        '<h3 style="margin-top:16px">Puntos de riesgo hasta ahora</h3>'+ptsTable(sc)+
+      '</div>'+
+    '</div>';
+}
+function ptsTable(sc){
+  if(!sc.items.length) return '<p class="note">Sin eventos: 0 puntos.</p>';
+  return '<table class="pts">'+sc.items.map(function(x){return '<tr><td>'+x.t+' <span class="muted">('+(x.g==='acc'?'Accidentes':'Condiciones')+')</span></td><td>+'+x.p+'</td></tr>';}).join('')+
+    '<tr class="tot"><td>Índice = 100 − '+sc.total+'</td><td>'+sc.ix+'</td></tr></table>';
+}
+
+// Stylized route map (not a real road map)
+var ROUTE='M60 250 C 150 245, 190 185, 290 170 S 450 120, 540 56';
+function mapSvg(h){
+  return '<svg class="chart" id="mapSvg" viewBox="0 0 600 300" role="img" aria-label="Recorrido esquemático de '+esc(h.origen)+' al frigorífico">'+
+    '<rect x="0" y="0" width="600" height="300" rx="10" fill="var(--cc-menta-suave)"/>'+
+    '<g stroke="var(--cc-linea)" stroke-width="1.5" fill="none"><path d="M0 90 L600 120"/><path d="M0 200 L600 230"/><path d="M180 0 L220 300"/><path d="M420 0 L380 300"/></g>'+
+    '<path id="routeBg" d="'+ROUTE+'" fill="none" stroke="var(--cc-blanco)" stroke-width="12" stroke-linecap="round"/>'+
+    '<path id="route" d="'+ROUTE+'" fill="none" stroke="var(--cc-pasto)" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 0"/>'+
+    '<g id="mapMarks"></g>'+
+    '<circle cx="60" cy="250" r="9" fill="var(--cc-pasto)"/><text x="40" y="286" class="svgtx2">'+esc(h.origen)+'</text>'+
+    '<rect x="528" y="44" width="24" height="24" rx="5" fill="var(--cc-pasto)"/><text x="556" y="32" text-anchor="end" class="svgtx2">Frigorífico Exportador Demo</text>'+
+    '<text x="300" y="140" class="svgtx" text-anchor="middle">'+h.km+' km</text>'+
+    '</svg>';
+}
+function placeMap(){
+  var svg=$('mapSvg');if(!svg) return;
+  var h=herd(S.sel),path=svg.querySelector('#route'),L=path.getTotalLength();
+  var axis=h.isLive?TRIP_MIN:h.dur;
+  var prog=h.isLive?Math.min(1,S.sim/TRIP_MIN):1;
+  path.setAttribute('stroke-dasharray',(L*prog)+' '+L);
+  var g=svg.querySelector('#mapMarks'),out='';
+  herdEvents(h).forEach(function(e){
+    if(e.type!=='frenada'&&e.type!=='curva') return;
+    var p=path.getPointAtLength(L*Math.min(1,e.m/axis));
+    out+='<circle cx="'+p.x+'" cy="'+p.y+'" r="9" fill="var(--cc-atencion)" stroke="var(--cc-blanco)" stroke-width="3"><title>'+evLabel(e)+'</title></circle>';
+  });
+  var tp=path.getPointAtLength(L*prog);
+  if(h.isLive&&S.phase==='viaje'){
+    out+='<g transform="translate('+(tp.x-16)+' '+(tp.y-16)+')"><circle cx="16" cy="16" r="18" fill="var(--cc-tinta)"/><svg x="4" y="4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cc-crema)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-truck"/></svg></g>';
+  }
+  g.innerHTML=out;
+}
+function tempSvg(h,axis){
+  var W=600,H=280,L=60,R=16,T=20,B=44;
+  var x=function(m){return L+(W-L-R)*m/axis;},y=function(t){return T+(H-T-B)*(1-(t-0)/40);};
+  var upto=h.isLive?S.sim:h.dur,pts=[];
+  for(var m=0;m<=upto;m+=Math.max(2,Math.round(axis/120))) pts.push(x(m).toFixed(1)+','+y(tempAt(h,m)).toFixed(1));
+  pts.push(x(upto).toFixed(1)+','+y(tempAt(h,upto)).toFixed(1));
+  var grid='';[0,10,20,30,40].forEach(function(t){grid+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="var(--cc-linea)"/><text x="'+(L-8)+'" y="'+(y(t)+5)+'" text-anchor="end" class="svgtx">'+t+'°</text>';});
+  var hrs='';for(var hh=0;hh*60<=axis;hh+=(axis>400?2:1)){hrs+='<text x="'+x(hh*60)+'" y="'+(H-12)+'" text-anchor="middle" class="svgtx">'+hh+' h</text>';}
+  var last=pts[pts.length-1].split(',');
+  return '<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Temperatura en ruta con franja de 5 a 30 grados">'+
+    '<rect x="'+L+'" y="'+y(30)+'" width="'+(W-L-R)+'" height="'+(y(5)-y(30))+'" fill="var(--cc-temp-bg)"/>'+grid+
+    '<text x="'+(W-R-8)+'" y="'+(y(5)-10)+'" text-anchor="end" class="svgtx">franja 5–30 °C</text>'+hrs+
+    (pts.length>1?'<polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--cc-temp)" stroke-width="3" stroke-linejoin="round"/>':'')+
+    '<circle cx="'+last[0]+'" cy="'+last[1]+'" r="6" fill="var(--cc-temp)"/>'+
+    '<text x="'+Math.min(+last[0]+10,W-90)+'" y="'+(+last[1]-12)+'" class="svgtx2">'+Math.round(tempAt(h,upto))+' °C</text>'+
+    '</svg>';
+}
+
+function pRecepcion(){
+  var h=HERDS['T-0418'],stage=liveStage();
+  if(stage==='espera'||stage==='viaje'){
+    return '<div class="ph"><h2>Recepción · T-0418</h2><span class="sp"></span>'+(stage==='viaje'?'<span class="live-pill"><i></i>En viaje · llega '+clock(START+TRIP_MIN)+'</span>':'<span class="chip st-pend">Esperando carga</span>')+'</div>'+
+      '<div class="empty">'+ico('pin')+'<b style="color:var(--cc-tinta)">La tropa todavía no llegó</b><span>La recepción se habilita cuando el chofer toca "Llegué". El informe de la tropa ya está listo antes de la descarga.</span></div>'+ckBlock('T-0418');
+  }
+  var sc=score(live()),st=state(sc.ix),space=h.jaula/h.cab,lo=1.0,hi=1.8;
+  var pos=function(v){return ((v-lo)/(hi-lo)*100).toFixed(1)+'%';};
+  var tagsHtml='';for(var i=1;i<=h.cab;i++){var read=i<=S.tags,fall=S.caidos.indexOf(i)>=0;tagsHtml+='<button type="button" class="tagc'+(read?' read':'')+(fall?' fall':'')+(S.selTag===i&&!S.received?' sel':'')+'" data-tag="'+i+'" aria-label="Caravana '+tag(i)+(fall?', caído':'')+'">'+String(i).padStart(2,'0')+'</button>';}
+  var allRead=S.tags>=h.cab;
+  return '<div class="ph"><h2>Recepción · T-0418</h2>'+(S.received?'<span class="chip st-calma">'+ico('check')+'Recibida</span>':'<span class="chip st-info">En la rampa</span>')+'<span class="sp"></span>'+chipState(sc.ix)+'<span class="num" style="font-weight:700;font-size:22px">'+sc.ix+'</span>'+
+      '<div class="sub">Llegó '+clock(START+TRIP_MIN)+' · '+h.transp+' · DT-e con '+h.cab+' caravanas esperadas</div></div>'+
+    '<div class="grid2">'+
+      '<div class="figure"><h3>'+ico('scan')+'Caravanas leídas contra DT-e</h3>'+
+        '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px"><span class="num" style="font-size:34px;font-weight:700">'+S.tags+'</span><span class="muted num">/ '+h.cab+' esperadas</span><span style="margin-left:auto">'+(allRead?'<span class="chip st-calma">'+ico('check')+'Coinciden</span>':'')+'</span></div>'+
+        '<div class="meter"><i style="width:'+(S.tags/h.cab*100)+'%"></i></div>'+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+
+          '<button type="button" class="btn p" id="readTags" '+(allRead||S.reading?'disabled':'')+'>'+ico('nfc')+(S.reading?'Leyendo en la manga…':'Leer caravanas')+'</button>'+
+          '<button type="button" class="btn d" id="markFall" '+(!allRead||S.received?'disabled':'')+'>'+ico('alert')+(S.caidos.indexOf(S.selTag)>=0?'Quitar marca de caído':'Marcar animal caído')+'</button>'+
+        '</div>'+
+        '<p class="note" style="margin-bottom:8px">'+(allRead?'Seleccionada: caravana <span class="mono">'+tag(S.selTag)+'</span>':'Las caravanas se leen al pasar por la manga.')+'</p>'+
+        '<div class="tags">'+tagsHtml+'</div>'+
+        (S.caidos.length?'<div class="palert st-alerta" style="margin-top:12px"><b>Animal caído · caravana '+tag(S.caidos[0])+'</b><span>Atenderlo en el lugar, sin arrastrar (Reg. 1099/2009, Anexo III, 1.11). Avisar al veterinario.</span></div>':'')+
+        (allRead?'<div style="margin-top:12px">'+protoBlock(sc.ix)+'</div>':'')+
+      '</div>'+
+      '<div style="display:grid;gap:16px;align-content:start">'+
+        '<div class="figure"><h3>Espacio por animal</h3><div><span class="num" style="font-size:30px;font-weight:700">'+dec(space)+' m²</span> <span class="muted">por animal · '+h.cab+' cabezas en '+h.jaula+' m²</span></div>'+
+          '<div class="rangebar"><span class="ok" style="left:'+pos(1.3)+';right:calc(100% - '+pos(1.6)+')"></span><span class="mk" style="left:calc('+pos(space)+' - 2px)"></span><span class="lb" style="left:'+pos(1.3)+'">1,3</span><span class="lb" style="left:'+pos(1.6)+'">1,6</span></div>'+
+          '<p class="note">Rango de referencia para ~'+h.peso+' kg: 1,3–1,6 m² (Reg. 1/2005, Anexo I, cap. VII).</p></div>'+
+        '<div class="figure"><h3>'+ico('drop')+'Corral asignado</h3><dl class="kv"><dt>Corral</dt><dd>4</dd><dt>Agua</dt><dd>Permanente</dd><dt>Alimento</dt><dd>Si pasan 12 h</dd></dl></div>'+
+        '<button type="button" class="btn p bigbtn" id="confirmRec" '+(!allRead||S.received?'disabled':'')+'>'+(S.received?'Recepción confirmada':'Confirmar recepción')+'</button>'+
+      '</div>'+
+    '</div>'+
+    '<div><h3 style="font-size:20px;margin-bottom:8px">Checklist UE de la tropa</h3>'+ckBlock('T-0418')+'</div>';
+}
+function protoBlock(ix){
+  var st=state(ix);
+  if(st==='calma') return '';
+  return '<div class="palert st-'+st+'" style="display:grid;gap:6px"><b>'+ico('drop')+' Protocolo de recuperación en corral · acción recomendada</b>'+
+    '<span>La tropa llegó en '+WORD[st]+' ('+ix+'). El panel sugiere, no aplica nada solo; decide el veterinario:</span>'+
+    '<ul style="margin:0;padding-left:20px;display:grid;gap:2px"><li>Horas extra de descanso en corral antes de la faena.</li><li>Agua permanente y control de bebederos.</li><li>Feromona apaciguadora materna, donde esté autorizada (a validar con SENASA y el veterinario).</li></ul>'+
+    '<span class="note" style="margin:0">Evidencia publicada: menor cortisol con la feromona aplicada durante los 7 días previos a la faena, no como dosis única en la descarga (Translational Animal Science, 2024). Registro en SENASA y aceptación UE: sin confirmar.</span></div>';
+}
+function readTags(){
+  if(S.reading||S.tags>=36) return;
+  S.reading=true;renderPanel();var g=GEN;
+  var t=setInterval(function(){if(g!==GEN){clearInterval(t);return;}S.tags++;if(S.tags>=36){S.tags=36;S.reading=false;clearInterval(t);toast('check','T-0418: 36 de 36 caravanas leídas. Coinciden con el DT-e.');}
+    if(S.tab==='recepcion') renderPanel();},70);
+}
+function markFall(){
+  var i=S.caidos.indexOf(S.selTag);
+  if(i>=0) S.caidos.splice(i,1); else {S.caidos=[S.selTag];toast('alert','Animal caído registrado: caravana '+tag(S.selTag)+'. Índice actualizado.');}
+  renderAll();
+}
+function confirmRec(){
+  S.received=true;
+  toast('shield','Recepción de T-0418 confirmada. El informe UE está listo.');
+  S.tab='informe';S.sel='T-0418';renderAll();
+}
+
+function pInforme(){
+  var id=S.sel;
+  var pick='<div style="display:flex;gap:8px;flex-wrap:wrap">'+['T-0417','T-0418','T-0419'].map(function(k){return '<button type="button" class="btn '+(k===id?'p':'g')+'" data-pick="'+k+'" style="min-height:48px">'+k+'</button>';}).join('')+'</div>';
+  if(id==='T-0418'&&!S.received){
+    return '<div class="ph"><h2>Informe y certificado UE</h2><span class="sp"></span>'+pick+'</div>'+
+      '<div class="empty">'+ico('shield')+'<b style="color:var(--cc-tinta)">El informe de T-0418 se emite al confirmar la recepción</b><span>Mientras tanto, el checklist se va completando con los datos del viaje.</span><button type="button" class="btn s" data-goto="recepcion">Ir a Recepción</button></div>'+ckBlock('T-0418');
+  }
+  var h=herd(id),sc=score(h),st=state(sc.ix),c=checklist(id),vm=verdict(c.must),vt=verdict(c.trip.filter(function(x){return x.st!=='info';}));
+  var kg=h.cab*1.37;
+  return '<div class="ph"><h2>Informe y certificado UE</h2><span class="sp"></span>'+pick+
+      '<div class="sub">Tropa '+id+' · '+h.origen+', '+h.zona+' · '+h.transp+' · '+h.cab+' novillos · carga '+h.carga+', descarga '+h.llegada+'</div></div>'+
+    '<div class="repgrid">'+
+      '<div style="display:grid;gap:16px;align-content:start">'+
+        '<div class="bigix st-'+st+'"><div><div class="muted">Índice de bienestar</div><div class="n">'+sc.ix+'</div></div><div><div class="w">'+WORD[st]+'</div><div class="muted">100 = viaje perfecto</div></div></div>'+
+        '<div class="scale" aria-hidden="true"><i style="left:'+sc.ix+'%"></i><span style="left:40%">40</span><span style="left:70%">70</span></div>'+
+        '<div class="grid2"><div class="kpi"><span class="k">Accidentes</span><span class="v">'+sc.accIx+' <small>/ 100</small></span></div><div class="kpi"><span class="k">Condiciones del viaje</span><span class="v">'+sc.condIx+' <small>/ 100</small></span></div></div>'+
+        protoBlock(sc.ix)+
+        '<div class="figure" style="background:var(--cc-blanco)"><h3>Por qué da '+sc.ix+'</h3>'+ptsTable(sc)+'<p class="note" style="margin-top:8px">Índice por eventos con puntos iniciales del equipo, a calibrar con los hematomas en la res.</p></div>'+
+        '<div class="verdicts"><div class="verdict"><span><b>Obligatorio</b> · Reg. 1099/2009</span>'+ckChip(vm)+'</div><div class="verdict"><span><b>Viaje</b> · referencia Reg. 1/2005</span>'+ckChip(vt)+'</div></div>'+
+        '<div class="figure" style="background:var(--cc-blanco)"><h3>'+ico('shield')+'Certificado para el comprador europeo</h3><div class="qrbox"><div class="qr" id="qr" aria-label="Código QR del certificado público"></div><div style="min-width:0;flex:1;display:grid;gap:8px"><span>Versión pública en inglés, sin login. Escaneá para verla.</span><span class="url" id="certUrl">'+esc(CERT_URL)+'</span>'+
+          '<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn s" id="copyUrl">'+ico('link')+'Copiar enlace</button><button type="button" class="btn g" id="dlPdf">'+ico('download')+'Descargar PDF</button></div></div></div></div>'+
+        '<div class="figure" style="background:var(--cc-blanco)"><h3>Merma estimada de la tropa</h3><div><span class="num" style="font-size:26px;font-weight:700">≈'+dec(kg,0)+' kg</span> <span class="muted">de carne recortada por lesiones en '+h.cab+' animales</span></div><p class="note">Promedio IPCVA: ≈1,37 kg de carcasa perdidos por animal en recortes de lesiones. Además, el viaje se lleva entre 2 y 10 % del peso vivo según la distancia (CFI). Cada kilo de merma es agua, alimento y emisiones que ya se invirtieron en el animal. Se reemplaza por el dato real de la inspección en la res.</p></div>'+
+      '</div>'+
+      '<div><h3 style="font-size:20px;margin-bottom:8px">Checklist UE</h3>'+ckBlock(id)+'</div>'+
+    '</div>';
+}
+
+function pCierre(){
+  var ids=['T-0417','T-0418','T-0419'];
+  var rows=ids.map(function(id){
+    var h=herd(id),pending=id==='T-0418'&&!S.received,sc=score(h),st=state(sc.ix);
+    return '<tr><td class="mono"><b>'+id+'</b></td><td>'+h.transp+'</td><td>'+(pending?'<span class="chip st-pend">En curso</span>':'<span class="num" style="font-weight:700">'+sc.ix+'</span> '+chipState(sc.ix))+'</td><td>'+(pending?'—':sc.accIx+' / '+sc.condIx)+'</td><td><span class="chip st-pend">'+ico('clock')+'Se carga al faenar</span></td></tr>';
+  }).join('');
+  var bars=ids.map(function(id){var h=herd(id),pending=id==='T-0418'&&!S.received,sc=score(h),st=pending?'pend':state(sc.ix);
+    return '<div class="barrow st-'+st+'"><span>'+h.transp+'</span><span class="tr"><i style="width:'+(pending?0:sc.ix)+'%"></i></span><span class="v">'+(pending?'—':sc.ix)+'</span></div>';}).join('');
+  return '<div class="ph"><h2>Cierre con la res</h2><div class="sub">Compara el índice de cada tropa con los hematomas y decomisos que ya registra la inspección. Con esa comparación se calibran los puntos del índice.</div></div>'+
+    '<div class="figure" style="background:var(--cc-blanco)"><h3>Ranking de transportistas · índice de bienestar de hoy</h3><div class="bars">'+bars+'</div><p class="note" style="margin-top:8px">Una tropa por transportista en esta demo. Con más viajes se muestra el promedio por transportista.</p></div>'+
+    '<div class="figure" style="background:var(--cc-blanco)"><h3>'+ico('activity')+'Aprendizaje de viajes anteriores · recomendación para el próximo viaje</h3>'+
+      '<p style="margin:0 0 8px"><span class="chip st-info">Ejemplo con historial ficticio</span></p>'+
+      '<div class="palert st-atencion"><b>Ruta Campo La Aguada → planta</b><span>En los últimos 5 viajes por esta ruta hubo frenadas bruscas en el km 140. Sugerencia: reducir la velocidad en ese tramo o salir de madrugada si hay calor.</span></div>'+
+      '<p class="note" style="margin-top:8px">Recomendaciones basadas en el historial de viajes, no una predicción. Aprende con cada viaje; el modelo se calibra con los datos del piloto.</p></div>'+
+    '<div class="tbl"><table><thead><tr><th>Tropa</th><th>Transportista</th><th>Índice</th><th>Accidentes / Condiciones</th><th>Hematomas y decomisos en la res</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<p class="note">Los hematomas y decomisos salen del registro de inspección de la planta (no es norma UE: es calidad de producto). Referencia: el 58,8 % de 15.361 bovinos llegó a faena con al menos una lesión (IPCVA, Cuadernillo Técnico Nº 5).</p>';
+}
+
+/* ---------- public certificate (EN) ---------- */
+var EN_ITEMS={'Tiempo de viaje':'Journey time','Temperatura en el viaje':'Temperature during the journey','Espacio por animal':'Space allowance per animal','Manejo durante el viaje':'Handling during the journey','Evaluación del envío a la llegada':'Assessment of each consignment on arrival','Animales caídos o que no caminan':'Animals unable to walk','Descarga y espera en corral':'Unloading and lairage time','Agua en corrales':'Water in lairage pens'};
+function certFinal(){
+  // The public certificate always shows the completed T-0418 record.
+  return S&&S.received?Object.assign(live(),{dur:TRIP_MIN}):HERDS['T-0418'];
+}
+function certHtml(){
+  var h=certFinal(),sc=score(h),st=state(sc.ix),space=h.jaula/h.cab;
+  var must=[
+    ['Assessment of each consignment on arrival','Reg. (EC) 1099/2009, Annex III, 1.1','ok','Herd report available before unloading · 36/36 ear tags read'],
+    h.caidos?['Animals unable to walk','Reg. (EC) 1099/2009, Annex III, 1.11','obs',h.caidos+' downed animal handled on the spot, not dragged · ear tag '+h.caidoTag]:['Animals unable to walk','Reg. (EC) 1099/2009, Annex III, 1.11','ok','No downed animals'],
+    ['Unloading and lairage time','Reg. (EC) 1099/2009, Annex III, 1.2','ok','Unloaded 13:40 · 0 h 20 min in lairage · feed alert at 12 h'],
+    ['Water in lairage pens','Reg. (EC) 1099/2009, Annex III, 1.6','ok','Pen 4 with permanent water (plant record)']];
+  var trip=[
+    ['Journey time','Reg. (EC) 1/2005, Annex I, Ch. V, 1.2 and 1.4','ok',fmtDur(h.dur)+' · maximum 8 h for a standard vehicle'],
+    ['Temperature during the journey','Reg. (EC) 1/2005, Annex I, Ch. VI, 3.1','ok','Maximum '+h.tmax+' °C · range 5–30 °C'],
+    ['Space allowance per animal','Reg. (EC) 1/2005, Annex I, Ch. VII','ok',(space.toFixed(2))+' m² per animal (36 head in 52 m²) · range 1.3–1.6 m² for ~450 kg'],
+    ['Handling during the journey','Reg. (EC) 1/2005, Annex I, Ch. III, 1.8','info',h.fren+' harsh braking events and '+h.curv+' sharp turns recorded']];
+  var rows=function(l){return l.map(function(x){return '<div class="ckrow"><div><div class="t">'+x[0]+'</div><div class="art">'+x[1]+'</div></div>'+ckChip(x[2],true)+'<div class="ev">'+x[3]+'</div></div>';}).join('');};
+  return '<div class="head"><div class="brand" style="font-size:22px"><svg width="36" height="36" style="--a:var(--cc-menta);--b:#1F4D3A"><use href="#iso"/></svg><span>Chill <b>Cow</b></span></div>'+
+      '<h1>Animal welfare transport record</h1><div>Herd <span class="mono">T-0418</span> · 36 steers ~450 kg · Campo La Aguada, Córdoba, Argentina → Frigorífico Exportador Demo</div><div class="mono">Issued 12 Nov 2026 · read-only · no login required</div></div>'+
+    '<span class="badge-demo">Prototype · fictional sample data</span>'+
+    '<div class="bigix st-'+st+'"><div><div class="muted">Welfare index</div><div class="n">'+sc.ix+'</div></div><div><div class="w">'+WORD_EN[st]+'</div><div class="muted">100 = perfect journey · Accidents '+sc.accIx+' · Journey conditions '+sc.condIx+'</div></div></div>'+
+    '<div class="verdicts"><div class="verdict"><span><b>Binding</b> · Reg. (EC) 1099/2009, Art. 12 equivalence</span>'+ckChip(h.caidos?'obs':'ok',true)+'</div><div class="verdict"><span><b>Journey</b> · EU reference, Reg. (EC) 1/2005</span>'+ckChip('ok',true)+'</div></div>'+
+    '<div class="ck"><h4>Binding for export <span>Reg. (EC) 1099/2009</span></h4>'+rows(must)+'<h4>Journey · EU reference <span>Reg. (EC) 1/2005 applies within the EU; used here as the benchmark</span></h4>'+rows(trip)+'</div>'+
+    '<div class="card"><b style="font-family:var(--cc-font-titulo)">Data sources</b><p class="note" style="margin-top:6px">Mandatory SENASA ear tags (read by NFC at loading and unloading), electronic transit document (DT-e), the driver\'s phone (GPS and accelerometer) and the plant\'s own reception records. No device is added to the animal.</p></div>';
+}
+function pCertPreview(){
+  return '<div class="ph"><h2>Certificado público</h2><div class="sub">Lo que ve el comprador europeo al escanear el QR. Solo lectura, en inglés, sin cuenta.</div></div>'+
+    '<div style="border:1px solid var(--cc-linea);border-radius:20px;padding:16px;background:var(--cc-crema)"><div class="cert" style="padding:0">'+certHtml()+'</div></div>';
+}
+
+/* ---------- QR ---------- */
+function drawQr(){
+  var box=$('qr');if(!box) return;
+  if(typeof window.qrcode!=='function'){box.textContent='QR no disponible sin conexión';return;}
+  try{
+    var q=window.qrcode(0,'M');q.addData(CERT_URL);q.make();
+    var n=q.getModuleCount(),s='';
+    for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(q.isDark(r,c))s+='M'+c+' '+r+'h1v1h-1z';
+    box.innerHTML='<svg viewBox="-1 -1 '+(n+2)+' '+(n+2)+'" shape-rendering="crispEdges"><rect x="-1" y="-1" width="'+(n+2)+'" height="'+(n+2)+'" fill="#ffffff"/><path d="'+s+'" fill="#14201B"/></svg>';
+  }catch(e){box.textContent='QR no disponible';}
+}
+
+/* ---------- bindings ---------- */
+function bindPanel(){
+  var p=$('panel');
+  Array.prototype.forEach.call(p.querySelectorAll('[data-open]'),function(b){b.onclick=function(){S.sel=b.dataset.open;S.tab=(S.sel==='T-0418'&&liveStage()!=='recibida')?'detalle':'informe';if(S.sel!=='T-0418'&&S.tab==='detalle')S.tab='informe';renderAll();};});
+  Array.prototype.forEach.call(p.querySelectorAll('[data-pick]'),function(b){b.onclick=function(){S.sel=b.dataset.pick;renderPanel();};});
+  Array.prototype.forEach.call(p.querySelectorAll('[data-goto]'),function(b){b.onclick=function(){S.tab=b.dataset.goto;renderAll();};});
+  Array.prototype.forEach.call(p.querySelectorAll('[data-tag]'),function(b){b.onclick=function(){if(S.tags<36||S.received)return;S.selTag=+b.dataset.tag;renderPanel();};});
+  var r=$('readTags');if(r)r.onclick=readTags;
+  var m=$('markFall');if(m)m.onclick=markFall;
+  var c=$('confirmRec');if(c)c.onclick=confirmRec;
+  var cu=$('copyUrl');if(cu)cu.onclick=function(){
+    var ok=function(){toast('link','Enlace del certificado copiado.');};
+    try{navigator.clipboard.writeText(CERT_URL).then(ok,function(){selectUrl();});}catch(e){selectUrl();}
+  };
+  var dl=$('dlPdf');if(dl)dl.onclick=function(){toast('download','En el producto final se descarga el PDF firmado. En el prototipo, usá el QR o el enlace.');};
+  drawQr();
+}
+function selectUrl(){var u=$('certUrl');if(!u)return;var rg=document.createRange();rg.selectNodeContents(u);var s=window.getSelection();s.removeAllRanges();s.addRange(rg);toast('link','Enlace seleccionado: copialo con Cmd/Ctrl + C.');}
+
+function toast(icon,msg){
+  var t=document.createElement('div');t.className='toast';t.innerHTML=ico(icon)+'<span>'+esc(msg)+'</span>';
+  $('toasts').appendChild(t);setTimeout(function(){t.remove();},4200);
+  var all=$('toasts').children;while(all.length>3)all[0].remove();
+}
+
+function renderAll(){renderPhone();renderTabs();renderPanel();}
+
+/* ---------- routing: #cert shows only the public certificate ---------- */
+// Demo step presets (#paso-1..#paso-4): backup if the live flow breaks, and for the deck screenshots.
+function preset(n){
+  S=fresh();
+  if(n>=1){S.nfc='ok';S.tab='entrantes';}
+  if(n>=2){S.phase='viaje';S.sim=150;S.events=[{m:0,type:'carga'}];S.autoDone={0:true,1:true};S.fren=1;S.curv=1;
+    S.events.push({m:52,type:'curva'},{m:128,type:'frenada'},{m:150,type:'frenada'});S.fren=2;S.newEv=3;S.lastAlert='Frenada brusca registrada';S.lastAlertAt=Date.now()+60000;S.tab='detalle';}
+  if(n>=3){S.sim=TRIP_MIN;S.events.push({m:TRIP_MIN,type:'llegada'});S.phase='fin';S.lastAlert=null;S.tags=36;S.caidos=[CAIDO_0418];S.tab='recepcion';S.newEv=-1;}
+  if(n>=4){S.received=true;S.tab='informe';S.sel='T-0418';}
+}
+function route(){
+  var m=/^#paso-([1-5])$/.exec(location.hash);
+  STEP=m?+m[1]:0;
+  if(m){preset(Math.min(4,STEP));}
+  var pub=location.hash==='#cert', cert=pub||STEP===5;
+  $('pitchbar').hidden=!STEP;$('modes').hidden=pub;
+  $('mFull').setAttribute('aria-pressed',String(!STEP));$('mPitch').setAttribute('aria-pressed',String(!!STEP));
+  document.querySelectorAll('.pstep').forEach(function(b){if(+b.dataset.step===STEP)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
+  $('pbNext').hidden=STEP===5;
+  $('demoView').hidden=cert;$('certView').hidden=!cert;
+  document.querySelector('.appbar .tag').textContent=cert?'Public certificate':'Prototipo · datos ficticios';
+  $('btnCert').hidden=cert||!!STEP;$('btnReset').hidden=cert||!!STEP;
+  $('foot').textContent=cert?'Chill Cow prototype · Hack to the Future 2026 · herds, farms, carriers and plant are fictional.':'Chill Cow · prototipo para Hack to the Future 2026 · tropas, campos, transportistas y frigorífico ficticios · la lectura NFC y el acelerómetro se simulan con clics.';
+  if(cert){$('certView').innerHTML='<div class="cert">'+certHtml()+'</div>';document.documentElement.lang='en';}
+  else {document.documentElement.lang='es';renderAll();}
+}
+
+try{if(/tema=claro/.test(location.search))document.documentElement.setAttribute('data-theme','light');if(/tema=oscuro/.test(location.search))document.documentElement.setAttribute('data-theme','dark');}catch(e){}
+$('btnReset').onclick=function(){S=fresh();$('drawer').hidden=true;toast('reset','Demo reiniciada.');renderAll();};
+$('btnCert').onclick=function(){S.tab='cert';renderAll();};
+$('demoDot').onclick=function(){$('drawer').hidden=!$('drawer').hidden;};
+$('dFren').onclick=function(){addEvent('frenada');};
+$('dCurva').onclick=function(){addEvent('curva');};
+$('dFwd').onclick=function(){if(S.phase==='viaje'){S.sim=Math.min(TRIP_MIN,S.sim+30);runAutos();renderAll();}};
+document.addEventListener('keydown',function(e){
+  if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='f'||e.key==='F')addEvent('frenada');
+  if(e.key==='c'||e.key==='C')addEvent('curva');
+});
+window.addEventListener('hashchange',route);
+// Pitch mode: step buttons replace typing #paso-N in the URL; Demo completa = the live flow.
+var STEP=0;
+function goStep(n){n=Math.max(1,Math.min(5,n));if(location.hash==='#paso-'+n)route();else location.hash='paso-'+n;}
+function goFull(){history.replaceState(null,'',location.pathname+location.search);S=fresh();$('drawer').hidden=true;route();}
+$('mPitch').onclick=function(){goStep(STEP||1);};
+$('mFull').onclick=function(){if(STEP)goFull();};
+document.querySelectorAll('.pstep').forEach(function(b){b.onclick=function(){goStep(+b.dataset.step);};});
+$('pbNext').onclick=function(){goStep(STEP+1);};
+document.addEventListener('keydown',function(e){
+  if(!STEP||(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();goStep(STEP+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goStep(STEP-1);}
+  else if(/^[1-5]$/.test(e.key)){goStep(+e.key);}
+});
+
+// Trip clock: 1 s = 2 simulated minutes
+setInterval(function(){
+  if(location.hash==='#cert') return;
+  if(S.phase==='viaje'&&S.sim<TRIP_MIN){S.sim=Math.min(TRIP_MIN,S.sim+1);runAutos();renderPhone();if(S.tab==='entrantes'||S.tab==='detalle')renderPanel();}
+  else if(S.phase==='viaje'&&S.lastAlert&&Date.now()-S.lastAlertAt>7000){S.lastAlert=null;renderPhone();}
+},500);
+
+route();
+})();
+</script>

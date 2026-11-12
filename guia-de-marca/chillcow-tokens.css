@@ -1,0 +1,53 @@
+/* =========================================================
+   CHILL COW — Design tokens
+   Copiar en la app. Fuentes: Google Fonts (Outfit, Inter, JetBrains Mono)
+   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+   ========================================================= */
+:root {
+  /* Marca */
+  --cc-pasto: #1F4D3A;      /* primario: verde pasto profundo */
+  --cc-menta: #7FD1AE;      /* acento "chill" */
+  --cc-menta-suave: #D9F2E6;
+  --cc-crema: #F5F1E8;      /* fondo */
+  --cc-tinta: #14201B;      /* texto principal */
+  --cc-gris: #6B7A72;       /* texto secundario */
+  --cc-linea: #DCD6C8;      /* bordes */
+  --cc-blanco: #FFFFFF;
+
+  /* Estados del índice de bienestar (semáforo) */
+  --cc-calma: #2FA36B;      /* IB 70–100 */
+  --cc-calma-bg: #E3F4EA;
+  --cc-atencion: #E8A93B;   /* IB 40–69 */
+  --cc-atencion-bg: #FBF0DA;
+  --cc-alerta: #D9493B;     /* IB < 40 */
+  --cc-alerta-bg: #FBE3E0;
+
+  /* Datos complementarios */
+  --cc-temp: #3E8ED0;       /* temperatura / ambiente */
+
+  /* Tipografía */
+  --cc-font-titulo: 'Outfit', system-ui, sans-serif;
+  --cc-font-texto: 'Inter', system-ui, sans-serif;
+  --cc-font-dato: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Escala */
+  --cc-radio: 14px;
+  --cc-radio-chico: 8px;
+  --cc-sombra: 0 2px 12px rgba(20, 32, 27, .08);
+  --cc-espacio: 8px; /* múltiplos de 8 */
+}
+
+/* Modo oscuro (cabina del camión de noche) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cc-crema: #0F1A15;
+    --cc-tinta: #EEF3EF;
+    --cc-gris: #9BAAA2;
+    --cc-linea: #24342C;
+    --cc-blanco: #16241D;
+    --cc-menta-suave: #1C3A2D;
+    --cc-calma-bg: #15301F;
+    --cc-atencion-bg: #3A2D12;
+    --cc-alerta-bg: #3D1814;
+  }
+}

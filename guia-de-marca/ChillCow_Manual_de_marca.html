@@ -1,0 +1,215 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual de marca Chill Cow</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--pasto:#1F4D3A;--menta:#7FD1AE;--msuave:#D9F2E6;--crema:#F5F1E8;--tinta:#14201B;--gris:#6B7A72;--linea:#DCD6C8;
+--calma:#2FA36B;--calmabg:#E3F4EA;--aten:#E8A93B;--atenbg:#FBF0DA;--alerta:#D9493B;--alertabg:#FBE3E0;--temp:#3E8ED0}
+*{box-sizing:border-box}html,body{margin:0;background:#e4e0d6;color:var(--tinta);font-family:'Inter',sans-serif}
+.page{max-width:900px;margin:24px auto;background:var(--crema)}
+section{padding:48px 48px;border-bottom:1px solid var(--linea)}
+h1,h2,h3{font-family:'Outfit',sans-serif;margin:0}
+.sec{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--pasto);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+h2{font-size:38px;font-weight:800;letter-spacing:-.01em;margin-bottom:14px}
+h3{font-size:18px;font-weight:700;margin:22px 0 8px}
+p{line-height:1.6;margin:0 0 10px;font-size:15px}
+.muted{color:var(--gris)}
+.cover{background:var(--pasto);color:var(--crema);padding:70px 48px 56px;border:0}
+.cover .lock{display:flex;align-items:center;gap:22px}
+.cover h1{font-size:76px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.cover h1 span{color:var(--menta)}
+.cover .claim{font-size:22px;margin-top:26px;font-family:'Outfit';font-weight:500;max-width:620px}
+.cover .meta{margin-top:40px;font-family:'JetBrains Mono';font-size:12px;letter-spacing:.12em;opacity:.8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:18px}
+.card b{display:block;font-family:'Outfit';font-size:17px;margin-bottom:4px}
+.card p{font-size:13.5px;margin:0}
+.logobox{border-radius:14px;padding:28px;display:flex;align-items:center;justify-content:center;gap:14px;min-height:150px}
+.wm{font-family:'Outfit';font-weight:800;font-size:40px;letter-spacing:-.01em}
+.sw{border-radius:14px;overflow:hidden;border:1px solid var(--linea);background:#fff}
+.sw .c{height:90px}.sw .t{padding:10px 12px;font-size:12.5px}
+.sw .t b{font-family:'Outfit';font-size:15px;display:block}
+.sw code{font-family:'JetBrains Mono';font-size:12px;color:var(--gris)}
+.type{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:20px;margin-bottom:12px;display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:center}
+.type small{font-family:'JetBrains Mono';font-size:11px;color:var(--gris);display:block;margin-top:4px}
+.state{border-radius:14px;padding:16px;border-left:6px solid var(--s);background:var(--b)}
+.state .n{font-family:'JetBrains Mono';font-weight:700;font-size:28px;color:var(--s)}
+.state b{font-family:'Outfit';font-size:18px;display:block;margin:4px 0}
+.state p{font-size:13px;margin:0}
+.do,.dont{border-radius:14px;padding:16px 18px;font-size:13.5px;line-height:1.55}
+.do{background:var(--calmabg)}.dont{background:var(--alertabg)}
+.do h3,.dont h3{margin:0 0 6px;font-size:16px}
+.do ul,.dont ul{margin:0;padding-left:18px}
+/* UI */
+.phone{width:280px;border-radius:30px;background:var(--tinta);padding:10px;margin:0 auto}
+.screen{background:var(--crema);border-radius:22px;padding:16px;min-height:480px}
+.top{display:flex;align-items:center;gap:8px;font-family:'Outfit';font-weight:800;font-size:16px}
+.top span{color:var(--pasto)}
+.gauge{margin:16px 0;background:#fff;border-radius:16px;padding:16px;text-align:center;border:1px solid var(--linea)}
+.gauge .big{font-family:'JetBrains Mono';font-size:48px;font-weight:700;color:var(--aten);line-height:1}
+.gauge .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-top:4px}
+.bar{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--alerta) 0 40%,var(--aten) 40% 70%,var(--calma) 70%);margin-top:12px;position:relative}
+.bar i{position:absolute;left:52%;top:-5px;width:4px;height:18px;background:var(--tinta);border-radius:2px}
+.alert{border-radius:14px;padding:12px;background:var(--alertabg);border-left:5px solid var(--alerta);font-size:12.5px;margin-bottom:8px}
+.alert b{font-family:'Outfit';font-size:14px;display:block;color:var(--alerta)}
+.row{display:flex;justify-content:space-between;background:#fff;border:1px solid var(--linea);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-bottom:6px}
+.row span:last-child{font-family:'JetBrains Mono';font-weight:700}
+.btn{display:inline-block;border-radius:12px;padding:12px 18px;font-family:'Outfit';font-weight:700;font-size:15px}
+.btn.p{background:var(--pasto);color:var(--crema)}.btn.s{background:var(--msuave);color:var(--pasto)}.btn.d{background:var(--alerta);color:#fff}
+.chip{display:inline-block;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;border-radius:14px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--linea);vertical-align:top}
+th{background:var(--pasto);color:var(--crema);font-family:'Outfit';font-weight:700}
+td code{font-family:'JetBrains Mono';font-size:12px}
+pre{background:var(--tinta);color:#d9f2e6;border-radius:14px;padding:16px;font-family:'JetBrains Mono';font-size:12px;overflow-x:auto;line-height:1.5}
+.foot{padding:20px 48px;font-size:12px;color:var(--gris)}
+@media screen and (max-width:760px){section,.cover{padding:32px 16px}.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}.type{grid-template-columns:1fr}.cover h1{font-size:48px}}
+@media print{html,body{background:var(--crema)}.page{margin:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="iso" viewBox="0 0 120 120">
+<ellipse cx="22" cy="44" rx="17" ry="9" transform="rotate(-20 22 44)" fill="var(--a)"/>
+<ellipse cx="98" cy="44" rx="17" ry="9" transform="rotate(20 98 44)" fill="var(--a)"/>
+<path d="M38 30 C34 20 38 13 46 12" fill="none" stroke="var(--a)" stroke-width="6" stroke-linecap="round"/>
+<path d="M82 30 C86 20 82 13 74 12" fill="none" stroke="var(--a)" stroke-width="6" stroke-linecap="round"/>
+<rect x="30" y="26" width="60" height="74" rx="28" fill="var(--a)"/>
+<rect x="34" y="70" width="52" height="34" rx="17" fill="var(--b)"/>
+<circle cx="50" cy="86" r="4" fill="var(--a)"/><circle cx="70" cy="86" r="4" fill="var(--a)"/>
+<path d="M41 54 Q47 60 53 54" fill="none" stroke="var(--b)" stroke-width="4.5" stroke-linecap="round"/>
+<path d="M67 54 Q73 60 79 54" fill="none" stroke="var(--b)" stroke-width="4.5" stroke-linecap="round"/>
+</symbol></defs></svg>
+<div class="page">
+
+<section class="cover">
+<div class="lock"><svg width="96" height="96" style="--a:var(--menta);--b:var(--pasto)"><use href="#iso"/></svg><h1>Chill <span>Cow</span></h1></div>
+<p class="claim">Bienestar animal que se mide, carne que vale más.</p>
+<div class="meta">MANUAL DE MARCA · V1 · HACK TO THE FUTURE 2026</div>
+</section>
+
+<section><div class="sec">01 · Concepto</div><h2>Qué es Chill Cow</h2>
+<p>Chill Cow es una aplicación que mide el estrés y los accidentes del bovino desde la carga en el campo hasta la faena, y alerta cuando sus niveles pueden afectar la calidad de la carne.</p>
+<div class="grid3" style="margin-top:14px">
+<div class="card"><b>Propósito</b><p>Que ningún animal llegue a faena con golpes o estrés evitables.</p></div>
+<div class="card"><b>Promesa</b><p>Convertir el bienestar animal en datos, y los datos en calidad de carne.</p></div>
+<div class="card"><b>Diferencial</b><p>Mide el último tramo, el que nadie mide: carga, camión, corral y manga.</p></div>
+</div>
+<h3>El nombre</h3>
+<p><b>Chill Cow</b> une el objetivo (una vaca tranquila) con un tono cercano y fácil de recordar. "Chill" transmite calma sin sonar técnico, y funciona igual en español y en inglés, pensando en el mercado exportador.</p>
+<h3>Claim y frases</h3>
+<div class="grid2">
+<div class="card"><b>Claim principal</b><p>Bienestar animal que se mide, carne que vale más.</p></div>
+<div class="card"><b>Frase de cierre</b><p>Medir para cuidar. Cuidar para producir mejor.</p></div>
+</div></section>
+
+<section><div class="sec">02 · Personalidad</div><h2>Cómo es la marca</h2>
+<div class="grid4">
+<div class="card"><b>Calma</b><p>Nunca alarmista. Incluso las alertas son claras y serenas.</p></div>
+<div class="card"><b>Precisa</b><p>Habla con datos. Cada número tiene una fuente o un cálculo.</p></div>
+<div class="card"><b>Cercana</b><p>Le habla igual a un chofer que a un gerente.</p></div>
+<div class="card"><b>Responsable</b><p>Cuida al animal y al negocio al mismo tiempo.</p></div>
+</div>
+<h3>Tono de voz</h3>
+<table><tr><th>Usuario</th><th>Cómo le hablamos</th><th>Ejemplo</th></tr>
+<tr><td><b>Chofer</b></td><td>Corto, directo, en imperativo. Sin tecnicismos.</td><td>"Pará y revisá la jaula 2: hay un animal caído."</td></tr>
+<tr><td><b>Capataz de planta</b></td><td>Operativo, con prioridad clara.</td><td>"Tropa 0412 en amarillo: dar 4 h más de descanso."</td></tr>
+<tr><td><b>Gerente / exportador</b></td><td>Con números y en términos de negocio.</td><td>"Esta tropa tiene USD 300 en riesgo. El 70 % se generó en ruta."</td></tr></table>
+</section>
+
+<section><div class="sec">03 · Logo</div><h2>Isotipo y logotipo</h2>
+<p>El isotipo es una vaca de frente con <b>los ojos cerrados</b>: el gesto universal de la calma. El hocico en menta es el punto de color de la marca.</p>
+<div class="grid2" style="margin-top:12px">
+<div class="logobox" style="background:var(--crema);border:1px solid var(--linea)"><svg width="72" height="72" style="--a:var(--pasto);--b:var(--menta)"><use href="#iso"/></svg><span class="wm" style="color:var(--pasto)">Chill <span style="color:var(--calma)">Cow</span></span></div>
+<div class="logobox" style="background:var(--pasto)"><svg width="72" height="72" style="--a:var(--menta);--b:var(--pasto)"><use href="#iso"/></svg><span class="wm" style="color:var(--crema)">Chill <span style="color:var(--menta)">Cow</span></span></div>
+</div>
+<div class="grid4" style="margin-top:12px">
+<div class="logobox" style="background:#fff;border:1px solid var(--linea);min-height:110px"><svg width="64" height="64" style="--a:var(--pasto);--b:var(--menta)"><use href="#iso"/></svg></div>
+<div class="logobox" style="background:var(--menta);min-height:110px"><svg width="64" height="64" style="--a:var(--pasto);--b:#fff"><use href="#iso"/></svg></div>
+<div class="logobox" style="background:var(--tinta);min-height:110px"><svg width="64" height="64" style="--a:#fff;--b:var(--tinta)"><use href="#iso"/></svg></div>
+<div class="logobox" style="background:#fff;border:1px solid var(--linea);min-height:110px"><svg width="64" height="64" style="--a:var(--tinta);--b:#fff"><use href="#iso"/></svg></div>
+</div>
+<p class="muted" style="margin-top:10px;font-size:13px">Versiones: positiva, negativa, sobre menta, monocromática blanca y negra. Tamaño mínimo del isotipo: 24 px. Margen de seguridad: el ancho de una oreja alrededor de todo el logo.</p>
+<h3>Ícono de la app</h3>
+<div style="display:flex;gap:18px;align-items:center">
+<div style="width:96px;height:96px;border-radius:22px;background:var(--pasto);display:flex;align-items:center;justify-content:center"><svg width="70" height="70" style="--a:var(--menta);--b:var(--pasto)"><use href="#iso"/></svg></div>
+<div style="width:60px;height:60px;border-radius:14px;background:var(--pasto);display:flex;align-items:center;justify-content:center"><svg width="44" height="44" style="--a:var(--menta);--b:var(--pasto)"><use href="#iso"/></svg></div>
+<p class="muted" style="font-size:13px;margin:0">Fondo pasto, isotipo menta. El archivo SVG está en la carpeta <code>Logo Chill Cow</code> (SVG, PNG y PDF vectorial).</p></div>
+</section>
+
+<section><div class="sec">04 · Color</div><h2>Paleta</h2>
+<h3>Marca</h3>
+<div class="grid4">
+<div class="sw"><div class="c" style="background:#1F4D3A"></div><div class="t"><b>Pasto</b><code>#1F4D3A</code><br>Primario, fondos fuertes, botones</div></div>
+<div class="sw"><div class="c" style="background:#7FD1AE"></div><div class="t"><b>Menta</b><code>#7FD1AE</code><br>Acento "chill", detalles</div></div>
+<div class="sw"><div class="c" style="background:#F5F1E8"></div><div class="t"><b>Crema</b><code>#F5F1E8</code><br>Fondo de la app</div></div>
+<div class="sw"><div class="c" style="background:#14201B"></div><div class="t"><b>Tinta</b><code>#14201B</code><br>Texto principal</div></div>
+</div>
+<h3>Estados del índice de bienestar (semáforo)</h3>
+<div class="grid3">
+<div class="sw"><div class="c" style="background:#2FA36B"></div><div class="t"><b>Calma</b><code>#2FA36B</code><br>Índice 70 a 100</div></div>
+<div class="sw"><div class="c" style="background:#E8A93B"></div><div class="t"><b>Atención</b><code>#E8A93B</code><br>Índice 40 a 69</div></div>
+<div class="sw"><div class="c" style="background:#D9493B"></div><div class="t"><b>Alerta</b><code>#D9493B</code><br>Índice menor a 40</div></div>
+</div>
+<p class="muted" style="margin-top:10px;font-size:13px">Los colores de estado se usan <b>solo</b> para el estado del animal o de la tropa, nunca como decoración. Siempre van acompañados de un número o una palabra, para que se entiendan sin depender del color. Color complementario para temperatura y ambiente: <code>#3E8ED0</code>.</p>
+</section>
+
+<section><div class="sec">05 · Tipografía</div><h2>Tres familias, tres funciones</h2>
+<div class="type"><div><span style="font-family:'Outfit';font-weight:800;font-size:40px">Aa</span><small>Outfit · 700 / 800</small></div><div><span style="font-family:'Outfit';font-weight:700;font-size:24px">Títulos y marca</span><p class="muted" style="margin:4px 0 0;font-size:13px">Redondeada y amable. Para títulos, botones y el logotipo.</p></div></div>
+<div class="type"><div><span style="font-family:'Inter';font-weight:500;font-size:40px">Aa</span><small>Inter · 400 / 500 / 600</small></div><div><span style="font-size:17px">Textos de la interfaz y explicaciones.</span><p class="muted" style="margin:4px 0 0;font-size:13px">Muy legible en pantallas chicas y con sol.</p></div></div>
+<div class="type"><div><span style="font-family:'JetBrains Mono';font-weight:700;font-size:40px">42</span><small>JetBrains Mono · 500 / 700</small></div><div><span style="font-family:'JetBrains Mono';font-size:20px">IB 52 · 31,4 °C · 0,6 g</span><p class="muted" style="margin:4px 0 0;font-size:13px">Para datos y números: los dígitos tienen el mismo ancho y no "bailan" al actualizarse.</p></div></div>
+<p class="muted" style="font-size:13px">Las tres son gratuitas en Google Fonts.</p>
+</section>
+
+<section><div class="sec">06 · Interfaz</div><h2>Componentes de la app</h2>
+<div class="grid2" style="align-items:start">
+<div class="phone"><div class="screen">
+<div class="top"><svg width="26" height="26" style="--a:var(--pasto);--b:var(--menta)"><use href="#iso"/></svg>Chill <span>Cow</span></div>
+<div class="gauge"><div class="lbl">Índice de bienestar · Tropa 0412</div><div class="big">52</div><div class="lbl" style="color:var(--aten);font-weight:600">Atención</div><div class="bar"><i></i></div></div>
+<div class="alert"><b>Animal caído · Jaula 2</b>Caravana 032 · hace 3 min · km 140</div>
+<div class="row"><span>Accidentes (IA)</span><span style="color:var(--alerta)">61</span></div>
+<div class="row"><span>Estrés (IE)</span><span style="color:var(--aten)">35</span></div>
+<div class="row"><span>Temp. jaula · ITH</span><span style="color:var(--temp)">31,4 °C · 78</span></div>
+<div class="row"><span>Animales en rojo</span><span>3 / 37</span></div>
+<div class="row"><span>Pérdida estimada</span><span>USD 300</span></div>
+</div></div>
+<div>
+<h3 style="margin-top:0">Botones</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="btn p">Ver tropa</span><span class="btn s">Exportar informe</span><span class="btn d">Reportar caída</span></div>
+<h3>Etiquetas de estado</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip" style="background:var(--calmabg);color:var(--calma)">● Calma</span><span class="chip" style="background:var(--atenbg);color:#a87010">● Atención</span><span class="chip" style="background:var(--alertabg);color:var(--alerta)">● Alerta</span></div>
+<h3>Tarjetas de estado</h3>
+<div class="state" style="--s:var(--calma);--b:var(--calmabg);margin-bottom:8px"><div class="n">84</div><b>Calma</b><p>La tropa viaja bien. Sin acción necesaria.</p></div>
+<div class="state" style="--s:var(--aten);--b:var(--atenbg);margin-bottom:8px"><div class="n">52</div><b>Atención</b><p>Revisar al llegar. Sumar horas de descanso.</p></div>
+<div class="state" style="--s:var(--alerta);--b:var(--alertabg)"><div class="n">28</div><b>Alerta</b><p>Actuar ahora: parar, revisar y registrar.</p></div>
+</div></div>
+<h3>Reglas de interfaz</h3>
+<div class="grid3">
+<div class="card"><b>Un dato protagonista</b><p>Cada pantalla tiene un número principal: el índice de bienestar.</p></div>
+<div class="card"><b>Legible en el campo</b><p>Texto de 15 px como mínimo, alto contraste, botones de 48 px de alto.</p></div>
+<div class="card"><b>Alertas con acción</b><p>Toda alerta dice qué pasó, dónde y qué hacer.</p></div>
+</div>
+</section>
+
+<section><div class="sec">07 · Iconografía y gráficos</div><h2>Íconos y datos</h2>
+<p>Íconos de trazo redondeado de 2 px, en tinta o pasto, como los de la librería gratuita <b>Lucide</b> (sugeridos: <code>truck</code>, <code>thermometer</code>, <code>activity</code>, <code>alert-triangle</code>, <code>map-pin</code>, <code>clock</code>). Para gráficos: líneas de tiempo del viaje con los eventos marcados como puntos en color de estado.</p>
+</section>
+
+<section><div class="sec">08 · Uso correcto</div><h2>Qué sí y qué no</h2>
+<div class="grid2">
+<div class="do"><h3>Sí</h3><ul><li>Usar el isotipo sobre crema, blanco, pasto o menta.</li><li>Acompañar cada color de estado con un número o una palabra.</li><li>Escribir alertas cortas: qué, dónde y qué hacer.</li><li>Usar la fuente monoespaciada para todos los datos.</li></ul></div>
+<div class="dont"><h3>No</h3><ul><li>Deformar, rotar o cambiar los colores del isotipo.</li><li>Abrir los ojos de la vaca: la calma es la marca.</li><li>Usar rojo o amarillo como decoración.</li><li>Mostrar imágenes de animales lastimados o maltrato.</li></ul></div>
+</div></section>
+
+<section><div class="sec">09 · Para Tomás</div><h2>Tokens listos para el código</h2>
+<p>El archivo <code>chillcow-tokens.css</code> tiene todas las variables, incluido el modo oscuro para la cabina del camión de noche. Resumen:</p>
+<pre>/* Fuentes */
+&lt;link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"&gt;
+
+--cc-pasto:#1F4D3A  --cc-menta:#7FD1AE  --cc-crema:#F5F1E8  --cc-tinta:#14201B
+--cc-calma:#2FA36B  (IB 70–100)
+--cc-atencion:#E8A93B (IB 40–69)
+--cc-alerta:#D9493B  (IB &lt; 40)
+--cc-temp:#3E8ED0
+--cc-radio:14px  · espaciado en múltiplos de 8 px</pre>
+</section>
+
+<div class="foot">Chill Cow · Manual de marca v1 · Noviembre 2026 · Archivos: Logo Chill Cow (SVG, PNG, PDF vectorial) · Presentacion logo · ChillCow_Mockups_de_marca · chillcow-tokens.css</div>
+</div></body></html>
