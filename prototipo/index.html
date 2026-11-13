@@ -64,6 +64,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--cc-menta);outline-o
 .demo{display:grid;grid-template-columns:360px minmax(0,1fr);gap:24px;align-items:start;padding-block:24px}
 .colhead{display:flex;align-items:center;gap:8px;font-family:var(--cc-font-dato);font-size:15px;color:var(--cc-gris);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
 @media (max-width:900px){.demo{grid-template-columns:minmax(0,1fr)}}
+/* Keep the driver's phone in view while the plant panel scrolls (desktop only). */
+@media (min-width:901px){.demo>:first-child{position:sticky;top:16px}}
 
 /* Phone */
 .phone{width:340px;max-width:100%;margin:0 auto;background:var(--cc-marco);border-radius:40px;padding:12px 12px 16px;box-shadow:0 12px 40px rgba(20,32,27,.25);position:relative}
