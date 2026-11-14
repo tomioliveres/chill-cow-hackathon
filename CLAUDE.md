@@ -57,15 +57,17 @@ Son artifacts privados de la cuenta de Tomás Oliveres; pedile acceso si los nec
 - Doc de respaldo con datos y normativa: https://claude.ai/artifact/K8Q9roMxYoQBzZE4yBT29i
 - Brief del prototipo: https://claude.ai/artifact/UfyDJE4xkF8uNWe3ugWNXq
 
-## Commits y push (en la computadora de Tomás Oliveres)
+## Reglas generales
 
-Repo: https://github.com/tomioliveres/chill-cow-hackathon (público, rama `main`). Autorizado por Tomás:
+Las reglas generales de trabajo de Tomás (verificación, revisión de código, commits, worktrees, entrega por PR, cierre de sesión) viven en `~/.config/agent-rules/` (índice: `index.md`); leé cada archivo cuando corresponda. Acá van solo las reglas de este proyecto.
 
-1. Antes de hacer commit y push a `main`, cambiar a la cuenta dueña del repo: `gh auth switch -u tomioliveres`.
-2. Hacer el commit y el push.
-3. Apenas se confirme el push, volver a la cuenta por defecto: `gh auth switch -u atomdev1`.
+## Commits y push
 
-La carpeta `estudio/` no se sube nunca (está en `.gitignore`). Los compañeros pushean con su propia cuenta si Tomás los agrega como colaboradores.
+Repo: https://github.com/tomioliveres/chill-cow-hackathon (público, rama `main`, dueño `tomioliveres`). Formato de commits: `~/.config/agent-rules/commits.md`.
+
+- Los cambios entran por PR desde una rama propia (`~/.config/agent-rules/pr-delivery.md`), no por push directo a `main`.
+- Para pushear o usar `gh` en este repo se usa la cuenta dueña sin cambiar la cuenta activa: `GH_TOKEN="$(gh auth token --user tomioliveres)"` en cada comando. Nunca `gh auth switch`.
+- La carpeta `estudio/` no se sube nunca (está en `.gitignore`). Los compañeros pushean con su propia cuenta si Tomás los agrega como colaboradores.
 
 ## Reglas de relato (obligatorias en pitch, deck, docs y prototipo)
 
